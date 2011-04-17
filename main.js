@@ -64,7 +64,7 @@ for(filter in CFG.filters){
 		}
 }
 
-
+/**/
  http.createServer(function (request, response) {
  /**
  *URL PARSING
