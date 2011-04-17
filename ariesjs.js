@@ -32,7 +32,7 @@
  * The core feature of library is the constructor overriding.
  *
  * TODO: namespaces/libraries
- *    1. ARIES.events. - standart browser events handling<br/>
+ *	1. ARIES.events. - standart browser events handling<br/>
  *	implementation should be as simple as possible. Only basic<br/>
  *	features should be implemented. This will not be super featured<br/>
  *	library but it must be usable without 3dparty js.<br/>

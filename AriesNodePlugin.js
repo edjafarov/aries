@@ -6,7 +6,7 @@ var parser = new Zparse(Implementation);
 
 
 module.exports = {
-    	renderView:function(){
+		renderView:function(){
 			parser.parse(this.view);
 			var output = parser.process(this);
 			return output;

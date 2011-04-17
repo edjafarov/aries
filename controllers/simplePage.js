@@ -3,7 +3,7 @@ ARIES.Plugins["AriesNode"] = require('../AriesNodePlugin.js');
 var page = require('./page.js');
 
 function simplePage(){
-    this.title="simplePageTitle";
+	this.title="simplePageTitle";
 	this.content="Hallo ariesJs";
 }
 

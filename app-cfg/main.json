@@ -1,12 +1,12 @@
 {
-name:"Test App"
-,ver:"0.1"
-,urlMapping:[
-    "url-mapping.json"
+"name":"Test App"
+,"ver":"0.1"
+,"urlMapping":[
+	"url-mapping.json"
 ]
-,filters:[
+,"filters":[
 	"./filters/urlFilter.js"
 ]
-,interceptors:[
+,"interceptors":[
 ]
 }

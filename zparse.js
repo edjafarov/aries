@@ -27,7 +27,7 @@
  * Main Object of ZParse. Acting as a class and a namespace at the same time
  * @param {Object} implementation
  * @example
- *     <code>
+ * 	<code>
  * 	var parser1 = new ZParse();
  * 	var parser2 = new ZParse(customImplementation);
  * 

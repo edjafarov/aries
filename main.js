@@ -20,7 +20,7 @@ var CFG_FILE = fs.readFileSync(APP_CFG_PATH + "main.json");
 console.log("main.json config loading....");
 console.debug(CFG_FILE.toString());
 console.log("parsing main.json config....");
-var CFG=eval("("+ CFG_FILE + ")");
+var CFG=JSON.parse(CFG_FILE);
 console.debug(CFG);
 console.debug("*** starting " + CFG.name + " webapp version " + CFG.ver + " ***");
 
@@ -28,7 +28,7 @@ var urlMappings={};
 console.log("parsing urlMappings....\n");
 
 for(cfgMapping in CFG.urlMapping){
-    console.log("reading filename " + APP_CFG_PATH + CFG.urlMapping[cfgMapping]);
+	console.log("reading filename " + APP_CFG_PATH + CFG.urlMapping[cfgMapping]);
 	URL_MAPPING_FILE = fs.readFileSync(APP_CFG_PATH + CFG.urlMapping[cfgMapping]);
 	console.debug("parsing " + APP_CFG_PATH + CFG.urlMapping[cfgMapping]);
 	URL_MAPPING = eval("("+ URL_MAPPING_FILE + ")");
@@ -64,7 +64,7 @@ for(filter in CFG.filters){
 		}
 }
 
-/**/
+
  http.createServer(function (request, response) {
  /**
  *URL PARSING
@@ -93,7 +93,7 @@ for(filter in CFG.filters){
 	}
   
     
- }).listen(process.env.C9_PORT);
+ }).listen(8124);
 
  console.log('Server running at http://127.0.0.1:8124/');
 

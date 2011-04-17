@@ -1,6 +1,6 @@
 
 var Implementation = {
-    statement: {
+	statement: {
 		opener: '<:',
 		closer: ':>',
 		

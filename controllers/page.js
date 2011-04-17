@@ -6,7 +6,7 @@ var head = require('./head.js');
 
 
 function page(){
-    this.head = new head();
+	this.head = new head();
 	this.head.setTitle("This title is setted up by page");
 }
 

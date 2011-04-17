@@ -63,7 +63,7 @@ levels = {
 },
 appenderMakers = {
     "file": function(config, fileAppender) {
-    var layout;
+	var layout;
 	if (config.layout) {
 	    layout = layoutMakers[config.layout.type](config.layout);
 	}

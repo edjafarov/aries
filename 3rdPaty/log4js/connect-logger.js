@@ -29,7 +29,7 @@ module.exports = function(log4js_module) {
     var log4js = log4js_module;
 
     function getLogger(logger4js, options) {
-    if ('object' == typeof options) {
+	if ('object' == typeof options) {
 	    options = options || {};
 	} else if (options) {
 	    options = { format: options };
