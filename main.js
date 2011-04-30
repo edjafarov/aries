@@ -31,7 +31,7 @@ console.log("parsing urlMappings....\n");
 
 
 if(CFG.autoconfig){
-	fs.writeFileSync("./app-cfg/auto-urlmapping.json", "[]");
+	fs.writeFileSync("./app-cfg/auto-urlmapping.json", "{}");
 	var jsdoc=require(CFG.jsDocToolkit+"noderun.js");
 	jsdoc.jsdoctoolkit.init(["-c=./app-cfg/autoconfig.conf"]);
 }
@@ -41,12 +41,12 @@ for(cfgMapping in CFG.urlMapping){
 	console.log("reading filename " + CFG.urlMapping[cfgMapping]);
 	URL_MAPPING_FILE = fs.readFileSync( CFG.urlMapping[cfgMapping]);
 	console.debug("parsing " + CFG.urlMapping[cfgMapping]);
-	URL_MAPPING = eval("("+ URL_MAPPING_FILE + ")");
+	URL_MAPPING = JSON.parse(URL_MAPPING_FILE);
 	for(url in URL_MAPPING){
 		try{
-			var stats=fs.lstatSync(CONTROLLERS_PATH + URL_MAPPING[url] + ".js");
+			var stats=fs.lstatSync(URL_MAPPING[url].inFile);
 			if(stats.isFile()){
-				console.debug("url: " + url + " mapped to " + URL_MAPPING[url] + "class");
+				console.debug("url: " + url + " mapped to " + URL_MAPPING[url].inFile + "class");
 				urlMappings[url] = URL_MAPPING[url];
 			}else{
 				throw new Error("trying to map url: " + url + " to " + URL_MAPPING[url] + 
@@ -57,7 +57,7 @@ for(cfgMapping in CFG.urlMapping){
 		}
 	}
 }
-
+/* TODO: make filters
 var Filters=[];
 for(filter in CFG.filters){
 	console.log("reading filters " + CFG.filters[filter]);
@@ -73,21 +73,22 @@ for(filter in CFG.filters){
 			console.error(e);
 		}
 }
-
+*/
 
  http.createServer(function (request, response) {
  /**
  *URL PARSING
   */
 
-	for(var i=0; i< Filters.length; i++){
+	/*for(var i=0; i< Filters.length; i++){
 		Filters[i](request, response)
-	}
+	}*/
 	var urlObj=urlModule.parse(request.url, true);
 	
 	if(urlMappings[urlObj.pathname]){
 		response.writeHead(200, {'Content-Type': 'text/html'});
 		
+		//TODO: implement basic environment in more gentle way
 		var AriesContext={};
 		vm.runInNewContext(loadJsSource("./ariesjs.js"),AriesContext);
 		vm.runInNewContext(loadJsSource("./zparse.js"),AriesContext);
@@ -102,6 +103,7 @@ for(filter in CFG.filters){
 		
 		function loadJsSource(path){
 			var source=fs.readFileSync(path).toString();
+			// TODO: generalize following regexp
 			var importRegexp=/IO.import\("(.*?)"\)/g;
 			var importArray=source.match(importRegexp);
 			if(importArray){
@@ -112,11 +114,21 @@ for(filter in CFG.filters){
 			}
 			return source;
 		}
-		
-		vm.runInNewContext(loadJsSource(CONTROLLERS_PATH + urlMappings[urlObj.pathname] + ".js"), context);
+		// TODO: cache script files for controllers
+		vm.runInNewContext(loadJsSource(urlMappings[urlObj.pathname].inFile), context);
 		
 		//console.log(util.inspect(context));
-		response.end((new context[urlMappings[urlObj.pathname]]()).renderView());
+		/**
+		 * TODO: Zparser should be taken as a basis. Using similar engine we should precompile views 
+		 * in pure Javascript this scripts will be used later to render view using the context
+		 *  prepared by controller. On client side we can still use Zparser. 
+		 */
+		var controllerClass=new context[urlMappings[urlObj.pathname].mappingFunction.split("#")[0]]();
+		if(urlMappings[urlObj.pathname].mappingFunction.indexOf("#")!=-1){
+			var controllerMethod=urlMappings[urlObj.pathname].mappingFunction.split("#")[1];
+			controllerClass[controllerMethod]();
+		}
+		response.end(controllerClass.renderView());
 	}else{
 	    response.writeHead(404, {'Content-Type': 'text/html'});
 		if(urlMappings["404"]){

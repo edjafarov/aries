@@ -1,4 +1,3 @@
 {
-"404":undefined,
-"/":"simplePage"
+"/":{"mappingFunction":"simplePage","arguments":[],"inFile":"./controllers/simplePage.js"}
 }

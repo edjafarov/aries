@@ -12,11 +12,11 @@ JSDOC.PluginManager.registerPlugin(
 				var CFG=JSON.parse(CFG_FILE);
 				if(!CFG) CFG=[];
 				var getMappingValue=new RegExp("value=(\"|')(.*?)(\"|')");
-				mappingObject.mappingUrl=matchResult[1].match(getMappingValue)[2];
+				var mappingUrl=matchResult[1].match(getMappingValue)[2];
 				mappingObject.mappingFunction=symbol._name;
 				mappingObject.arguments=symbol.$args[1];
 				mappingObject.inFile=symbol.srcFile;
-				CFG.push(mappingObject);
+				CFG[mappingUrl]=mappingObject;
 				IO.saveFile("./app-cfg/","auto-urlmapping.json",JSON.stringify(CFG));
 				console.log(JSON.stringify(CFG));
 				console.log("******\n");

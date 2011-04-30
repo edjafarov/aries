@@ -3,6 +3,7 @@
 IO.import("./controllers/page");
 /**
  *@Controller 
+ *
  */
 function simplePage(){
 	this.title="simplePageTitle";
@@ -12,9 +13,9 @@ function simplePage(){
 simplePage = ARIES.Extend(simplePage).by(page);
 
 /**
-*@RequestMapping(value="/simplePage")
+* @RequestMapping(value="/simplePageA")
 */
 simplePage.prototype.init = function () {
-	return "test";
+	this.content="Hallo Dude!";
 };
 

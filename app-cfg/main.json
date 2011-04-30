@@ -2,7 +2,8 @@
 "name":"Test App"
 ,"ver":"0.1"
 ,"urlMapping":[
-	"./app-cfg/url-mapping.json"
+	"./app-cfg/url-mapping.json",
+	"./app-cfg/auto-urlmapping.json"
 ]
 ,"filters":[
 	"./filters/urlFilter.js"
