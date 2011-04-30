@@ -1,7 +1,9 @@
-var ARIES = require('../ariesjs.js');
-ARIES.Plugins["AriesNode"] = require('../AriesNodePlugin.js');
-var page = require('./page.js');
 
+
+IO.import("./controllers/page");
+/**
+ *@Controller 
+ */
 function simplePage(){
 	this.title="simplePageTitle";
 	this.content="Hallo ariesJs";
@@ -10,9 +12,9 @@ function simplePage(){
 simplePage = ARIES.Extend(simplePage).by(page);
 
 /**
-*@Controller
-*@requestmapping(url="/hotel/{cityId}")
+*@RequestMapping(value="/simplePage")
 */
-exports.constructor = function () {
-	return new simplePage();
+simplePage.prototype.init = function () {
+	return "test";
 };
+

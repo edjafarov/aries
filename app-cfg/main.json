@@ -2,11 +2,13 @@
 "name":"Test App"
 ,"ver":"0.1"
 ,"urlMapping":[
-	"url-mapping.json"
+	"./app-cfg/url-mapping.json"
 ]
 ,"filters":[
 	"./filters/urlFilter.js"
 ]
 ,"interceptors":[
 ]
+,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
+,"autoconfig":true
 }

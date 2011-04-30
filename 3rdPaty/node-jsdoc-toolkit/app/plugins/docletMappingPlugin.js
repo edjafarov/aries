@@ -3,17 +3,12 @@ JSDOC.PluginManager.registerPlugin(
     "JSDOC.docletMappingPlugin",
     {
         onSymbol : function(symbol) {
-			/*symbol.comment
-			symbol._name
-			symbol.isa
-			symbol.srcFile
-			symbol.arguments*/
 			var mappingObject={};
 			
 			var getRequestMappingObj=new RegExp("@RequestMapping\s*(.*)")
 			var matchResult=symbol.comment.toString().match(getRequestMappingObj);
 			if(matchResult!=null){
-				var CFG_FILE = IO.readFile("app/mapping.json");
+				var CFG_FILE = IO.readFile("./app-cfg/auto-urlmapping.json");
 				var CFG=JSON.parse(CFG_FILE);
 				if(!CFG) CFG=[];
 				var getMappingValue=new RegExp("value=(\"|')(.*?)(\"|')");
@@ -22,7 +17,7 @@ JSDOC.PluginManager.registerPlugin(
 				mappingObject.arguments=symbol.$args[1];
 				mappingObject.inFile=symbol.srcFile;
 				CFG.push(mappingObject);
-				IO.saveFile("app","mapping.json",JSON.stringify(CFG));
+				IO.saveFile("./app-cfg/","auto-urlmapping.json",JSON.stringify(CFG));
 				console.log(JSON.stringify(CFG));
 				console.log("******\n");
 			}

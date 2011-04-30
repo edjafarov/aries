@@ -3,11 +3,12 @@
  */
 
 function main() {
+	
 	IO.include("lib/JSDOC.js");
 	IO.includeDir("plugins/");
 	
 	// process the options
-	
+	//console.log(JSON.stringify(JSDOC.opt,null,"\t"));
 	// the -c option: options are defined in a configuration file
 	if (JSDOC.opt.c) {
 		eval("JSDOC.conf = " + IO.readFile(JSDOC.opt.c));
@@ -17,6 +18,7 @@ function main() {
 		for (var c in JSDOC.conf) {
 			if (c !== "D" && !defined(JSDOC.opt[c])) { // commandline overrules config file
 				JSDOC.opt[c] = JSDOC.conf[c];
+				
 			}
 		}
 		

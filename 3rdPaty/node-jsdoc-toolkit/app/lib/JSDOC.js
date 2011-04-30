@@ -13,12 +13,13 @@
 JSDOC = {
 };
 
+
 /**
 	@requires Opt
  */
 if (typeof arguments == "undefined") arguments = [];
 JSDOC.opt = Opt.get(
-	arguments, 
+		global.internal_args, 
 	{
 		a: "allfunctions", 
 		c: "conf",

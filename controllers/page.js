@@ -1,9 +1,4 @@
-
-
-var ARIES = require('../ariesjs.js');
-ARIES.Plugins["AriesNode"] = require('../AriesNodePlugin.js');
-var head = require('./head.js');
-
+IO.import("./controllers/head");
 
 function page(){
 	this.head = new head();
@@ -12,7 +7,6 @@ function page(){
 
 page = ARIES.Extend(page).core();
 
-module.exports = page;
 
 page.makeAriesNode();
 

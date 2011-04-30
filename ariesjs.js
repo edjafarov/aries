@@ -179,4 +179,4 @@ var ARIES = new (function(){
 	};
 })();
 
-module.exports = ARIES;
+//module.exports = ARIES;

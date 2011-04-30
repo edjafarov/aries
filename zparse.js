@@ -366,4 +366,3 @@ ZParse.parseXMLToJSON = function(xml) {
 	return result;
 }
 
-module.exports =  ZParse;

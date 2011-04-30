@@ -171,4 +171,3 @@ var Implementation = {
 	}
 };
 
-module.exports = Implementation;
