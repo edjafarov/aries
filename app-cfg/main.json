@@ -12,4 +12,5 @@
 ]
 ,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
 ,"autoconfig":true
+,"UrlResolver":"./li/DynamicUrlResolver.js"
 }
