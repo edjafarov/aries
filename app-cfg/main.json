@@ -6,7 +6,8 @@
 	"./app-cfg/auto-urlmapping.json"
 ]
 ,"filters":[
-	"./filters/urlFilter.js"
+	"./filters/PostFilter.js"
+	,"./filters/GetFilter.js"
 ]
 ,"interceptors":[
 ]

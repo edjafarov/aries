@@ -7,6 +7,7 @@ var urlModule = require('url');
 var util = require('util');
 var vm = require('vm');
 var eventsModule = require('events');
+var querystring = require('querystring');
 require('./3rdPaty/log4js/log4js.js')();
 
 
@@ -91,6 +92,10 @@ function loadJsSource(path){
 
 function getContext(){
 	var AriesContext={};
+	for(a in global){
+		AriesContext[a]=global[a];
+	}
+	
 	vm.runInNewContext(loadJsSource("./ariesjs.js"),AriesContext);
 	vm.runInNewContext(loadJsSource("./zparse.js"),AriesContext);
 	vm.runInNewContext(loadJsSource("./implementation.js"),AriesContext);
@@ -113,9 +118,7 @@ function appServer(request, response){
 	 *URL PARSING
 	  */
 
-		/*for(var i=0; i< Filters.length; i++){
-			Filters[i](request, response)
-		}*/
+		console.log(util.inspect(request.params));
 		var urlObj=urlModule.parse(request.url, true);
 		
 		if(UrlResolver.resolve(urlObj.pathname)){
@@ -160,8 +163,51 @@ function appServer(request, response){
 	    	
 }
 
+var requestQueue=[];
+function getFilter(path){
+	var tmpContext=getContext();
+	tmpContext.EventEmitter=eventsModule.EventEmitter;
+	tmpContext.querystring=querystring;
+	tmpContext.require=require;
+	tmpContext.util=util;
+	vm.runInNewContext(loadJsSource(path),tmpContext);
+	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
+}
+for(var i=0; i<CFG.filters.length; i++){
+	requestQueue.push(getFilter(CFG.filters[i]));
+	//TODO: we need to set up full array of filters and only then
+	//it is possible to chain them using on end event
+	/**
+	 * Filters are inherit event emitters to be able to emmit events. That makes possible to write cthem in
+	 * asynchronus style. Filters should implement method "filter" and fire end event than all job will be done.
+	 * */
+}
+//console.log(util.inspect(requestQueue[0]));
+
+for(var i=0; i<requestQueue.length; i++){
+	if(requestQueue[i+1]){
+		var temporary=requestQueue[i+1];
+		requestQueue[i].on("end", function(request, response){
+			temporary["filter"](request, response);
+			});
+	}else{
+		requestQueue[i].on("end", appServer);
+	}
+}
+
+
+function startServerQueue(request, response){
+	if(requestQueue.length==0){
+		appServer(request, response);
+	}else{
+		requestQueue[0]["filter"](request, response);
+	}
+}
+
  http.createServer(function (request, response) {
-	 appServer(request, response);
+	 
+	 startServerQueue(request, response);
+
  }).listen(8124);
 
  console.log('Server running at http://127.0.0.1:8124/');
