@@ -13,5 +13,5 @@ function SimpleUrlResolver (){//cacheble
 			if(!config) throw new Error("couldNot resolve this URL: " + url);
 			return config.inFile;
 		}
-	}
+	};
 }

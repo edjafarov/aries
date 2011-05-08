@@ -6,6 +6,7 @@ function DynamicUrlResolver(){//cacheble dynamic low perfomance
 		resolve:function(url){
 			var resolved=null;
 			if(cache[url]) return cache[url];
+			// cache regular expressions for all urls in urlMappings
 			if(!cachedRegexp){
 				cachedRegexp={};
 				var regxp=new RegExp("\{(\\w+?)\}","g");
@@ -27,7 +28,8 @@ function DynamicUrlResolver(){//cacheble dynamic low perfomance
 			
 			for(configUrl in cachedRegexp){
 				var resolveMatch=url.match(new RegExp("^" + configUrl + "/?$"));
-				
+				//map variables inside url on argumentsToPass array
+				//TODO: need to map request/response also
 				if(resolveMatch){
 					resolved =cachedRegexp[configUrl];
 					resolved.argumentsToPass=[];

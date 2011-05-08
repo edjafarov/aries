@@ -1,9 +1,10 @@
-
-
 IO.import("./controllers/page");
+
 /**
+ *@class
  *@Controller 
- * @RequestMapping(value="/test")
+ *@Model
+ *@RequestMapping(value="/test")
  */
 function simplePage(){
 	this.title="simplePageTitle";
@@ -15,7 +16,10 @@ simplePage = ARIES.Extend(simplePage).by(page);
 /**
 * @RequestMapping(value="/tryIt/{dyna}/{gona}/{topa}")
 */
-simplePage.prototype.init = function (response,dyna, request, topa, gona) {
-	this.content="Hallo Dude! this Is dynamic test: "+dyna +" be nice with " + topa +" because "+gona;
+simplePage.prototype.init = function (/**@test*/ response, dyna, request, /**@test1*/ topa, gona) {
+	var form = ["<form action='/tryIt/rrr/ttt/yyy' method='post'>",
+	"<input type='hidden' name='field1' value='this ia hidden field'/> <input name='field2' type='text' value=''/><input type='submit'/></form>"].join('');
+	this.content="Hallo Dude! this Is dynamic test: "+dyna +" be nice with " + topa +" because "+gona + form;
+
 };
 

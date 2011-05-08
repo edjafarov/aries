@@ -5,7 +5,7 @@ var http = require('http');
 var fs = require('fs');
 var urlModule = require('url');
 var util = require('util');
-var vm = require('vm')
+var vm = require('vm');
 var eventsModule = require('events');
 require('./3rdPaty/log4js/log4js.js')();
 
@@ -75,73 +75,93 @@ for(filter in CFG.filters){
 }
 */
 
- http.createServer(function (request, response) {
- /**
- *URL PARSING
-  */
-
-	/*for(var i=0; i< Filters.length; i++){
-		Filters[i](request, response)
-	}*/
-	var urlObj=urlModule.parse(request.url, true);
-	
-	if(urlMappings[urlObj.pathname]){
-		response.writeHead(200, {'Content-Type': 'text/html'});
-		
-		//TODO: implement basic environment in more gentle way
-		var AriesContext={};
-		vm.runInNewContext(loadJsSource("./ariesjs.js"),AriesContext);
-		vm.runInNewContext(loadJsSource("./zparse.js"),AriesContext);
-		vm.runInNewContext(loadJsSource("./implementation.js"),AriesContext);
-		vm.runInNewContext(loadJsSource("./AriesNodePlugin.js"),AriesContext);
-		
-		var context={
-				console:console,
-				loadedModules:[],
-				ARIES:AriesContext.ARIES
-		};
-		
-		function loadJsSource(path){
-			var source=fs.readFileSync(path).toString();
-			// TODO: generalize following regexp
-			var importRegexp=/IO.import\("(.*?)"\)/g;
-			var importArray=source.match(importRegexp);
-			if(importArray){
-			for(var i=0; i< importArray.length ; i++){
-				var pathToImport=importArray[i].split('"')[1];
-				source=source.replace('IO.import("'+pathToImport+'");','/**** imported ****/\n' + loadJsSource(pathToImport + ".js"));
-			}
-			}
-			return source;
-		}
-		// TODO: cache script files for controllers
-		vm.runInNewContext(loadJsSource(urlMappings[urlObj.pathname].inFile), context);
-		
-		//console.log(util.inspect(context));
-		/**
-		 * TODO: Zparser should be taken as a basis. Using similar engine we should precompile views 
-		 * in pure Javascript this scripts will be used later to render view using the context
-		 *  prepared by controller. On client side we can still use Zparser. 
-		 */
-		var controllerClass=new context[urlMappings[urlObj.pathname].mappingFunction.split("#")[0]]();
-		if(urlMappings[urlObj.pathname].mappingFunction.indexOf("#")!=-1){
-			var controllerMethod=urlMappings[urlObj.pathname].mappingFunction.split("#")[1];
-			controllerClass[controllerMethod]();
-		}
-		response.end(controllerClass.renderView());
-	}else{
-	    response.writeHead(404, {'Content-Type': 'text/html'});
-		if(urlMappings["404"]){
-			var resolvedController = require(CONTROLLERS_PATH + urlMappings["404"] + ".js");
-			var pageObject=resolvedController.constructor(urlObj.query);
-			response.end(pageObject.renderView());
-		}else{
-			response.end("404");
-		}
-		console.log("404" + request.url);
+function loadJsSource(path){
+	var source=fs.readFileSync(path).toString();
+	// TODO: generalize following regexp
+	var importRegexp=/IO.import\("(.*?)"\)/g;
+	var importArray=source.match(importRegexp);
+	if(importArray){
+	for(var i=0; i< importArray.length ; i++){
+		var pathToImport=importArray[i].split('"')[1];
+		source=source.replace('IO.import("'+pathToImport+'");','/**** imported ****/\n' + loadJsSource(pathToImport + ".js"));
 	}
-  
-    
+	}
+	return source;
+}
+
+function getContext(){
+	var AriesContext={};
+	vm.runInNewContext(loadJsSource("./ariesjs.js"),AriesContext);
+	vm.runInNewContext(loadJsSource("./zparse.js"),AriesContext);
+	vm.runInNewContext(loadJsSource("./implementation.js"),AriesContext);
+	vm.runInNewContext(loadJsSource("./AriesNodePlugin.js"),AriesContext);
+	
+	return AriesContext;
+}
+
+function getInstance(path){
+	var tmpContext={urlMappings:urlMappings};
+	vm.runInNewContext(loadJsSource(path),tmpContext);
+	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
+}
+
+var UrlResolver = getInstance(CFG.UrlResolver);
+
+function appServer(request, response){
+	
+	 /**
+	 *URL PARSING
+	  */
+
+		/*for(var i=0; i< Filters.length; i++){
+			Filters[i](request, response)
+		}*/
+		var urlObj=urlModule.parse(request.url, true);
+		
+		if(UrlResolver.resolve(urlObj.pathname)){
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			
+			//TODO: implement basic environment in more gentle way
+
+			var context={
+					console:console,
+					loadedModules:[],
+					ARIES:getContext().ARIES
+			};
+			
+
+			// TODO: cache script files for controllers
+			vm.runInNewContext(loadJsSource(UrlResolver.resolve(urlObj.pathname).inFile), context);
+			
+			//console.log(util.inspect(context));
+			/**
+			 * TODO: Zparser should be taken as a basis. Using similar engine we should precompile views 
+			 * in pure Javascript this scripts will be used later to render view using the context
+			 *  prepared by controller. On client side we can still use Zparser. 
+			 */
+			var controllerClass=new context[UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[0]]();
+			if(UrlResolver.resolve(urlObj.pathname).mappingFunction.indexOf("#")!=-1){
+				var controllerMethod=UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[1];
+				controllerClass[controllerMethod].apply(controllerClass,UrlResolver.resolve(urlObj.pathname).argumentsToPass);
+			}
+			response.end(controllerClass.renderView());
+		}else{
+		    response.writeHead(404, {'Content-Type': 'text/html'});
+			if(urlMappings["404"]){
+				var resolvedController = require(CONTROLLERS_PATH + urlMappings["404"] + ".js");
+				var pageObject=resolvedController.constructor(urlObj.query);
+				response.end(pageObject.renderView());
+			}else{
+				response.end("404");
+			}
+			console.log("404" + request.url);
+		}
+	  
+	    	
+}
+
+ http.createServer(function (request, response) {
+	 appServer(request, response);
  }).listen(8124);
 
  console.log('Server running at http://127.0.0.1:8124/');
