@@ -58,23 +58,7 @@ for(cfgMapping in CFG.urlMapping){
 		}
 	}
 }
-/* TODO: make filters
-var Filters=[];
-for(filter in CFG.filters){
-	console.log("reading filters " + CFG.filters[filter]);
-		try{
-			var stats=fs.lstatSync(CFG.filters[filter]);
-			if(stats.isFile()){
-				console.debug("filter class " + CFG.filters[filter] + " found");
-				Filters.push(require(CFG.filters[filter]).filter);
-			}else{
-				throw new Error("trying to load: " + CFG.filters[filter] +" failed - file not found");
-			}
-		}catch(e){
-			console.error(e);
-		}
-}
-*/
+
 
 function loadJsSource(path){
 	var source=fs.readFileSync(path).toString();
@@ -162,32 +146,45 @@ function appServer(request, response){
 	  
 	    	
 }
-
+/**
+ * request queue variable takes all tasks to handle inside. Represents Flow of request.
+ */
 var requestQueue=[];
+/**
+ * returns instance of filter object using path
+ * @param path
+ * @return
+ */
 function getFilter(path){
+	/**
+	 * set up context for filters
+	 */
 	var tmpContext=getContext();
 	tmpContext.EventEmitter=eventsModule.EventEmitter;
 	tmpContext.querystring=querystring;
 	tmpContext.require=require;
 	tmpContext.util=util;
+	/**
+	 * compile instance of filter object
+	 */
 	vm.runInNewContext(loadJsSource(path),tmpContext);
 	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
 }
 for(var i=0; i<CFG.filters.length; i++){
 	requestQueue.push(getFilter(CFG.filters[i]));
-	//TODO: we need to set up full array of filters and only then
-	//it is possible to chain them using on end event
 	/**
-	 * Filters are inherit event emitters to be able to emmit events. That makes possible to write cthem in
+	 * Filters are inherit event emitters to be able to emmit events. That makes possible to write them in
 	 * asynchronus style. Filters should implement method "filter" and fire end event than all job will be done.
 	 * */
 }
 //console.log(util.inspect(requestQueue[0]));
-
+/**
+ * Set up handlers on requestQueue
+ */
 for(var i=0; i<requestQueue.length; i++){
 	if(requestQueue[i+1]){
 		var temporary=requestQueue[i+1];
-		requestQueue[i].on("end", function(request, response){
+		requestQueue[i].on("end", function(request, response){/**following anonymous function is necessary because scope is sharing otherwise*/
 			temporary["filter"](request, response);
 			});
 	}else{
@@ -196,6 +193,16 @@ for(var i=0; i<requestQueue.length; i++){
 }
 
 
+/**
+ * start server with tasks in 
+ * requestQueue
+ * Theoretically it would be great to put all flow inside this queue.
+ * that means:
+ * Filters->Controller->Interceptors->ViewRendering->more...
+ * @param request
+ * @param response
+ * @return
+ */
 function startServerQueue(request, response){
 	if(requestQueue.length==0){
 		appServer(request, response);
