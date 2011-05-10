@@ -59,6 +59,33 @@ for(cfgMapping in CFG.urlMapping){
 	}
 }
 
+function ClassLoader(){
+	var scripts={};
+	return {
+		loadJsSource: function(path){
+			var source = fs.readFileSync(path).toString();
+			// TODO: generalize following regexp
+			var importRegexp = /IO.import\("(.*?)"\)/g;
+			var importArray = source.match(importRegexp);
+			if (importArray) {
+				for (var i = 0; i < importArray.length; i++) {
+					var pathToImport = importArray[i].split('"')[1];
+					source = source.replace('IO.import("' + pathToImport + '");', '/**** imported ****/\n' + loadJsSource(pathToImport + ".js"));
+				}
+			}
+			return source;
+		},
+		getClass: function(path, context){
+			if(!scripts[path]){
+				scripts[path]=vm.createScript(this.loadJsSource(path));
+			}
+			if(!context){
+				context={console:console};
+			}
+			scripts[path].runInNewContext(tmpContext);
+		}
+	};
+}
 
 function loadJsSource(path){
 	var source=fs.readFileSync(path).toString();
