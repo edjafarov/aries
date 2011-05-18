@@ -14,6 +14,7 @@
 ,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
 ,"autoconfig":true
 ,"UrlResolver":"./li/DynamicUrlResolver.js"
+,"ClassLoader":"./li/ClassLoader.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
 				,"./implementation.js"

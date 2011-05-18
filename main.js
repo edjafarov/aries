@@ -30,8 +30,10 @@ console.debug("*** starting " + CFG.name + " webapp version " + CFG.ver + " ***"
 var urlMappings={};
 console.log("parsing urlMappings....\n");
 
-
-if(CFG.autoconfig){
+/**
+ * CONFIGURATION LOADING
+ */
+if(CFG.autoconfig){ /* Auto configuration parsing */
 	fs.writeFileSync("./app-cfg/auto-urlmapping.json", "{}");
 	var jsdoc=require(CFG.jsDocToolkit+"noderun.js");
 	jsdoc.jsdoctoolkit.init(["-c=./app-cfg/autoconfig.conf"]);
@@ -58,34 +60,125 @@ for(cfgMapping in CFG.urlMapping){
 		}
 	}
 }
+/**
+ * Set Up Class Loader
+ */
+var ClassLoader=require(CFG.ClassLoader);
+/**
+ * Set Up Url resolver
+ */
+var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
-function ClassLoader(){
-	var scripts={};
+var FlowController = function(){
 	return {
-		loadJsSource: function(path){
-			var source = fs.readFileSync(path).toString();
-			// TODO: generalize following regexp
-			var importRegexp = /IO.import\("(.*?)"\)/g;
-			var importArray = source.match(importRegexp);
-			if (importArray) {
-				for (var i = 0; i < importArray.length; i++) {
-					var pathToImport = importArray[i].split('"')[1];
-					source = source.replace('IO.import("' + pathToImport + '");', '/**** imported ****/\n' + loadJsSource(pathToImport + ".js"));
-				}
-			}
-			return source;
+		doNext: function(request, response){
+	
 		},
-		getClass: function(path, context){
-			if(!scripts[path]){
-				scripts[path]=vm.createScript(this.loadJsSource(path));
-			}
-			if(!context){
-				context={console:console};
-			}
-			scripts[path].runInNewContext(tmpContext);
+		error:function(){
 		}
-	};
+	}
 }
+
+var FlowDispatcher = function(flowController){
+	var flowController=flowController;
+	var flowQueue = [];
+	var currentIndex=0;
+
+	
+
+	return {
+	/**
+	 * @param item FlowItem to push in flowQueue
+	 * @param index optional
+	 */
+		pushToFlow:function(item, index){
+			/*TODO: validate `item` for being instance of FlowItem  */
+			flowQueue.splice(index, 0, item);
+		}
+		,currentFlowItem: function(){
+			return flowQueue[currentIndex]
+		}
+		
+	}
+}
+
+var flowDispatcher = FlowDispatcher(FlowController);
+
+
+function appServer(request, response){
+	
+
+		var urlObj=urlModule.parse(request.url, true);
+		
+		if(UrlResolver.resolve(urlObj.pathname)){
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			
+			//TODO: implement basic environment in more gentle way
+
+			var context={
+					console:console,
+					loadedModules:[],
+					ARIES:getContext().ARIES
+			};
+			
+			/** TODO: make it smoother, simplier and more obvious
+				pay more attention to contexts and set up them more centalized.
+			*/
+			
+			var controllerClass=new (ClassLoader.getClass(UrlResolver.resolve(urlObj.pathname).inFile,context))();
+			
+			//console.log(util.inspect(context));
+			/**
+			 * TODO: Zparser should be taken as a basis. Using similar engine we should precompile views 
+			 * in pure Javascript this scripts will be used later to render view using the context
+			 *  prepared by controller. On client side we can still use Zparser. 
+			 */
+			//var controllerClass=new context[UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[0]]();
+			if(UrlResolver.resolve(urlObj.pathname).mappingFunction.indexOf("#")!=-1){
+				var controllerMethod=UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[1];
+				controllerClass[controllerMethod].apply(controllerClass,UrlResolver.resolve(urlObj.pathname).argumentsToPass);
+			}
+			response.end(controllerClass.renderView());
+		}else{
+		    response.writeHead(404, {'Content-Type': 'text/html'});
+			if(urlMappings["404"]){
+				var resolvedController = require(CONTROLLERS_PATH + urlMappings["404"] + ".js");
+				var pageObject=resolvedController.constructor(urlObj.query);
+				response.end(pageObject.renderView());
+			}else{
+				response.end("404");
+			}
+			console.log("404" + request.url);
+		}
+	  
+	    	
+}
+/**
+ * request queue variable takes all tasks to handle inside. Represents Flow of request.
+ */
+var requestQueue=[];
+/**
+ * TODO: rewrite filters to be able to control flow from inside of filter
+ * returns instance of filter object using path
+ * @param path
+ * @return
+ */
+function getFilter(path){
+	/**
+	 * set up context for filters
+	 */
+	var tmpContext=getContext();
+	tmpContext.EventEmitter=eventsModule.EventEmitter;
+	tmpContext.querystring=querystring;
+	tmpContext.require=require;
+	tmpContext.util=util;
+	/**
+	 * compile instance of filter object
+	 */
+	vm.runInNewContext(loadJsSource(path),tmpContext);
+	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
+}
+
 
 function loadJsSource(path){
 	var source=fs.readFileSync(path).toString();
@@ -115,88 +208,8 @@ function getContext(){
 	return AriesContext;
 }
 
-function getInstance(path){
-	var tmpContext={urlMappings:urlMappings};
-	vm.runInNewContext(loadJsSource(path),tmpContext);
-	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
-}
 
-var UrlResolver = getInstance(CFG.UrlResolver);
 
-function appServer(request, response){
-	
-	 /**
-	 *URL PARSING
-	  */
-
-		console.log(util.inspect(request.params));
-		var urlObj=urlModule.parse(request.url, true);
-		
-		if(UrlResolver.resolve(urlObj.pathname)){
-			response.writeHead(200, {'Content-Type': 'text/html'});
-			
-			//TODO: implement basic environment in more gentle way
-
-			var context={
-					console:console,
-					loadedModules:[],
-					ARIES:getContext().ARIES
-			};
-			
-
-			// TODO: cache script files for controllers
-			vm.runInNewContext(loadJsSource(UrlResolver.resolve(urlObj.pathname).inFile), context);
-			
-			//console.log(util.inspect(context));
-			/**
-			 * TODO: Zparser should be taken as a basis. Using similar engine we should precompile views 
-			 * in pure Javascript this scripts will be used later to render view using the context
-			 *  prepared by controller. On client side we can still use Zparser. 
-			 */
-			var controllerClass=new context[UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[0]]();
-			if(UrlResolver.resolve(urlObj.pathname).mappingFunction.indexOf("#")!=-1){
-				var controllerMethod=UrlResolver.resolve(urlObj.pathname).mappingFunction.split("#")[1];
-				controllerClass[controllerMethod].apply(controllerClass,UrlResolver.resolve(urlObj.pathname).argumentsToPass);
-			}
-			response.end(controllerClass.renderView());
-		}else{
-		    response.writeHead(404, {'Content-Type': 'text/html'});
-			if(urlMappings["404"]){
-				var resolvedController = require(CONTROLLERS_PATH + urlMappings["404"] + ".js");
-				var pageObject=resolvedController.constructor(urlObj.query);
-				response.end(pageObject.renderView());
-			}else{
-				response.end("404");
-			}
-			console.log("404" + request.url);
-		}
-	  
-	    	
-}
-/**
- * request queue variable takes all tasks to handle inside. Represents Flow of request.
- */
-var requestQueue=[];
-/**
- * returns instance of filter object using path
- * @param path
- * @return
- */
-function getFilter(path){
-	/**
-	 * set up context for filters
-	 */
-	var tmpContext=getContext();
-	tmpContext.EventEmitter=eventsModule.EventEmitter;
-	tmpContext.querystring=querystring;
-	tmpContext.require=require;
-	tmpContext.util=util;
-	/**
-	 * compile instance of filter object
-	 */
-	vm.runInNewContext(loadJsSource(path),tmpContext);
-	return tmpContext[path.split("/")[path.split("/").length-1].replace(/\.js/,"")]();
-}
 for(var i=0; i<CFG.filters.length; i++){
 	requestQueue.push(getFilter(CFG.filters[i]));
 	/**
@@ -204,7 +217,7 @@ for(var i=0; i<CFG.filters.length; i++){
 	 * asynchronus style. Filters should implement method "filter" and fire end event than all job will be done.
 	 * */
 }
-//console.log(util.inspect(requestQueue[0]));
+
 /**
  * Set up handlers on requestQueue
  */
