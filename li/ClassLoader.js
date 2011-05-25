@@ -44,12 +44,10 @@ function ClassLoader(){
 	return {
 		clearDeploy:function(){
 		//TODO: write recursive directory clearing
-		}
-		,loadJsSource: function(path){
-			var source = fs.readFileSync(path).toString();
-			// TODO: generalize following regexp
-			var importRegexp = /IO.import\("(.*?)"\)/g;
-			var importArray = source.match(importRegexp);
+		},
+        buildJsSource:function(source){
+            var importRegexp = /IO.import\("(.*?)"\)/g;
+    		var importArray = source.match(importRegexp);
 			if (importArray) {
 				for (var i = 0; i < importArray.length; i++) {
 					var pathToImport = importArray[i].split('"')[1];
@@ -57,14 +55,39 @@ function ClassLoader(){
 					'/**** imported ****/\n' + this.loadJsSource(pathToImport + ".js"));
 				}
 			}
+            return source;
+            }
+		,loadJsSource: function(path){
+			var source = fs.readFileSync(path).toString();
+			// TODO: generalize following regexp
+			source=this.buildJsSource(source);
 			return source;
-		},
-		getClass: function(path, context){
-			if(!scripts[path]){
+		}
+        ,
+        getScriptFromSource:function(source, path /*optional*/){
+            if(path){
+                if(!scripts[path]){
+    		    	source=this.buildJsSource(source);
+			    	writeFile(path.replace(/\.\//,DEPLOY_PATH), source);
+			    	scripts[path]=vm.createScript(source, path.replace(/\.\//,DEPLOY_PATH));
+		    	}
+                return scripts[path];
+                }
+                
+                return vm.createScript(this.buildJsSource(source), "dynamic [getScriptFromSource]");
+            }
+        ,
+        getScript: function(path){
+            if(!scripts[path]){
 				var generatedSource=this.loadJsSource(path);
 				writeFile(path.replace(/\.\//,DEPLOY_PATH), generatedSource);
 				scripts[path]=vm.createScript(generatedSource, path.replace(/\.\//,DEPLOY_PATH));
 			}
+            return scripts[path];
+        }
+        ,
+		getClass: function(path, context){
+			this.getScript(path);
 			if(!context){
 				context={console:console,require:require};
 			}
