@@ -70,47 +70,46 @@ var ClassLoader=require(CFG.ClassLoader);
 var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
 
-var FlowController = function(){
-	return {
+var RequestContextBuilder = function(){
+	var resolvedController = null;
+    var resolvedModel = null;
+    return {
 		doNext: function(request, response){
-	
+	        resolvedController(request, response);
 		},
 		error:function(){
 		}
 	};
 };
 
-var FlowDispatcher = function(flowController){
-	var flowController=flowController;
-	var flowQueue = [];
-    
+var FlowDispatcher = function(requestContextBuilder){
+	
+    var filtersQueue=[];
+    var interceptorsQueue=[];
     var filters=[];
     var interceptors=[];
 
-    var currentIndex=0;
-
-	
 
 	return {
-	/**
-	 * @param item FlowItem to push in flowQueue
-	 * @param index optional
-	 */
 		initialize:function(){
-            
+            for(var i=0; i<filters.length; i++){
+                    filtersQueue.push(ClassLoader.getScript(filters[i]));
+                }
+                
+            for(i=0; i<interceptors.length; i++){
+                    interceptorsQueue.push(ClassLoader.getScript(interceptors[i]));
+                } 
+            for(i=interceptorsQueue.length-1;i=0;i--){
+                    interceptorsQueue.runInNewContext
+                }
+                
         },
-        dispatch:function(request, response){
-            
-            }
-        ,
         pushToFlow:function(item, index){
-			/*TODO: validate `item` for being instance of FlowItem  */
+			/*TODO: validate `item` for being instance of Flgit owItem  */
 			flowQueue.splice(index, 0, item);
-		},currentFlowItem: function(){
-			return flowQueue[currentIndex];
 		},
         dispatch:function(request, response){
-    		var resolvedController = ControllerResolver.resolve(request);
+    		var resolvedController = ControllerResolver.resolve(request);/*TODO:implement ControllerResolver*/
 			if(!resolvedController){
 				throw new Error("404 controller was not resolved");
 			}
@@ -120,7 +119,7 @@ var FlowDispatcher = function(flowController){
 	};
 };
 
-var flowDispatcher = FlowDispatcher(FlowController);
+var flowDispatcher = FlowDispatcher(RequestContextBuilder);
 
 
 function appServer(request, response){
