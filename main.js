@@ -69,6 +69,7 @@ var ClassLoader=require(CFG.ClassLoader);
  */
 var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
+
 var FlowController = function(){
 	return {
 		doNext: function(request, response){
@@ -76,13 +77,17 @@ var FlowController = function(){
 		},
 		error:function(){
 		}
-	}
-}
+	};
+};
 
 var FlowDispatcher = function(flowController){
 	var flowController=flowController;
 	var flowQueue = [];
-	var currentIndex=0;
+    
+    var filters=[];
+    var interceptors=[];
+
+    var currentIndex=0;
 
 	
 
@@ -91,16 +96,29 @@ var FlowDispatcher = function(flowController){
 	 * @param item FlowItem to push in flowQueue
 	 * @param index optional
 	 */
-		pushToFlow:function(item, index){
+		initialize:function(){
+            
+        },
+        dispatch:function(request, response){
+            
+            }
+        ,
+        pushToFlow:function(item, index){
 			/*TODO: validate `item` for being instance of FlowItem  */
 			flowQueue.splice(index, 0, item);
-		}
-		,currentFlowItem: function(){
-			return flowQueue[currentIndex]
+		},currentFlowItem: function(){
+			return flowQueue[currentIndex];
+		},
+        dispatch:function(request, response){
+    		var resolvedController = ControllerResolver.resolve(request);
+			if(!resolvedController){
+				throw new Error("404 controller was not resolved");
+			}
+
 		}
 		
-	}
-}
+	};
+};
 
 var flowDispatcher = FlowDispatcher(FlowController);
 
@@ -150,8 +168,6 @@ function appServer(request, response){
 			}
 			console.log("404" + request.url);
 		}
-	  
-	    	
 }
 /**
  * request queue variable takes all tasks to handle inside. Represents Flow of request.
@@ -255,7 +271,7 @@ function startServerQueue(request, response){
 	 
 	 startServerQueue(request, response);
 
- }).listen(8124);
+ }).listen(process.env.C9_PORT);
 
  console.log('Server running at http://127.0.0.1:8124/');
 
