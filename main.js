@@ -11,6 +11,8 @@ var querystring = require('querystring');
 require('./3rdPaty/log4js/log4js.js')();
 
 
+console.log(setTimeout);
+
 /**
  *Read configuration:
  * @params
@@ -69,18 +71,7 @@ var ClassLoader=require(CFG.ClassLoader);
  */
 var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
-/*
-var RequestContextBuilder = function(){
-	var resolvedController = null;
-    var resolvedModel = null;
-    return {
-		doNext: function(request, response){
-	        resolvedController(request, response);
-		},
-		error:function(){
-		}
-	};
-};*/
+
 
 var FlowDispatcher = function(requestContextBuilder){
 	
@@ -117,7 +108,16 @@ var FlowDispatcher = function(requestContextBuilder){
                         changedSource=[changedSource, "\n", className , ".",
                         methodName,"=", strigifiedMethod,"\n"].join("");
                         return this;                    
-                    }
+                    },
+                    replaceContext:function(method, context){
+                        var strigifiedMethod=method.toString();
+                        for(va in context){
+                            //TODO: potentially buggable
+                                var regX=new RegExp(va, "g");
+                                strigifiedMethod=strigifiedMethod.replace(regX,context[va]);
+                            }
+                            return strigifiedMethod;
+                        }
                 ,
                     toString:function(){
                        return changedSource;
@@ -129,6 +129,7 @@ var FlowDispatcher = function(requestContextBuilder){
     function ControllerResolver(request, response){
             var urlObj=url.parse(request.url, true);
             var resolvedUrl=UrlResolver.resolve(urlObj.pathname);
+            if(!resolvedUrl) return false;
             var controllerPath=resolvedUrl.inFile;
             var controllerClass=ClassLoader.getClass(controllerPath, {
                     console:console,
@@ -136,6 +137,8 @@ var FlowDispatcher = function(requestContextBuilder){
 			});
             return controllerClass;
     }
+    
+ 
     
     var DispatcherContext=vm.createContext({
         console:console,
@@ -145,14 +148,38 @@ var FlowDispatcher = function(requestContextBuilder){
         util:util,
         url:urlModule,
         UrlResolver:UrlResolver,
-        ClassLoader:ClassLoader
+        ClassLoader:ClassLoader,
+        setTimeout:setTimeout
         });
  
+    function ViewResolver(request, response){
+            if(request.view){
+                    ClassLoader.getScript("./views/"+request.view).runInNewContext({response:response,request:request});
+                }
+                else{
+                    response.end("ERROR - no view found");
+                    }
+        }
+        
+        function Dispatch(request, response){
+                    var controller=ControllerResolver(request, response);
+                    if(!controller) {
+                        response.end("error");
+                        return false;
+                    }else{
+                        request.resolvedController=controller;
+                        }
+                    
+                    (new firstFilterClassName).filter(request, response);
+            }
     
 
 	return {
 		initialize:function(){
             flowQueue+=ControllerResolver.toString()+"\n";
+            flowQueue+=ViewResolver.toString()+"\n";
+            flowQueue+=SourceBuilder().replaceContext(Dispatch, {firstFilterClassName:ClassLoader.getClassName(filters[0])})+"\n";
+            
             for(var i=0; i<filters.length-1; i++){
                 var nextItemClassName=ClassLoader.getClassName(filters[i+1]);
                 var currentItemClassName=ClassLoader.getClassName(filters[i]);
@@ -170,42 +197,50 @@ var FlowDispatcher = function(requestContextBuilder){
             var currentClassSource=ClassLoader.loadJsSource(filters[filters.length-1]);
                 var itemSource=SourceBuilder(currentItemClassName,currentClassSource);
                 itemSource.addPublicMethod(function doNext(req, res){
-                        var controller=ControllerResolver(req, res);
+                        var controller=req.resolvedController;
+                       
                         controller.prototype.doNext = function(req, res){
                                 (new firstInterceptor()).intercept(req, res);
                             }
+                            controller.prototype.setView = function (view){
+                                    req.view = view;
+                                }
                             new controller(req, res);
                     },{firstInterceptor: ClassLoader.getClassName(interceptors[0])});
-/*                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){\n"+
-                "var controller=ControllerResolver(req,res);\n"+
-                "controller.prototype.doNext=function(req, res){ (new "+ClassLoader.getClassName(interceptors[0])+").intercept(req,res); }\n"+
-                "new controller(req, res);\n"
-                +"}\n";*/
-            
+
             flowQueue+=itemSource.toString();
            
             for(var i=0; i<interceptors.length-1; i++){
                 var nextItemClassName=ClassLoader.getClassName(interceptors[i+1]);
                 var currentItemClassName=ClassLoader.getClassName(interceptors[i]);
                 var currentClassSource=ClassLoader.loadJsSource(interceptors[i]);
-                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){"+
-                "(new "+nextItemClassName+"()).intercept(req,res);"
-                +"}";
-                flowQueue+="\n"+currentClassSource;                
+                var itemSource=SourceBuilder(currentItemClassName,currentClassSource);
+                itemSource.addPublicMethod(
+                    function doNext(req, res){
+                        (new nextItemClassName()).intercept(req,res);
+                    }
+                    ,{nextItemClassName:nextItemClassName});
+                 
+                flowQueue+=itemSource.toString();       
                 }
+                
                 var currentItemClassName=ClassLoader.getClassName(interceptors[interceptors.length-1]);
                 var currentClassSource=ClassLoader.loadJsSource(interceptors[interceptors.length-1]);
-                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){"+
-                ""
-                +"}";
-                flowQueue+="\n"+currentClassSource;            
-            
+                var itemSource=SourceBuilder(currentItemClassName,currentClassSource);
+                itemSource.addPublicMethod(
+                    function doNext(req, res){
+                            ViewResolver(req, res);
+                        }
+                    );
+                
+                flowQueue+=itemSource.toString();            
+                
             this.flowQueueScript=ClassLoader.getScriptFromSource(flowQueue, "./flowQueue.js");
+            this.flowQueueScript.runInContext(DispatcherContext);
             return this.flowQueueScript;
         },
         dispatch:function(request, response){
-            this.flowQueueScript.runInContext(DispatcherContext);
-            (new DispatcherContext[ClassLoader.getClassName(filters[0])]()).filter(request, response);
+            DispatcherContext.Dispatch(request, response);
             
 		},
         setFilters:function(filterArr){
@@ -375,6 +410,7 @@ function startServerQueue(request, response){
  http.createServer(function (request, response) {
 	 
 	flowDispatcher.dispatch(request, response);
+    //response.end("Hallo World!End")
 
  }).listen(process.env.C9_PORT);
 
