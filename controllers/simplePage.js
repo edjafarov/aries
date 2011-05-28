@@ -6,9 +6,11 @@ IO.import("./controllers/page");
  *@Model
  *@RequestMapping(value="/test")
  */
-function simplePage(){
+function simplePage(req,res){
 	this.title="simplePageTitle";
 	this.content="Hallo ariesJs";
+    this.setView("simpleView.js");
+    this.doNext(req,res);
 }
 
 simplePage = ARIES.Extend(simplePage).by(page);

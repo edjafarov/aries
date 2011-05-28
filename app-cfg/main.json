@@ -6,10 +6,13 @@
 	"./app-cfg/auto-urlmapping.json"
 ]
 ,"filters":[
-	"./filters/PostFilter.js"
-	,"./filters/GetFilter.js"
+	"./filters/PostFilterNew.js"
+	,"./filters/GetFilterNew.js"
 ]
 ,"interceptors":[
+    "./interceptors/TestInterceptor.js",
+    "./interceptors/DaoInterceptor.js",
+    "./interceptors/MVCInterceptor.js"
 ]
 ,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
 ,"autoconfig":true

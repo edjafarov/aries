@@ -170,7 +170,7 @@ var FlowDispatcher = function(requestContextBuilder){
                         request.resolvedController=controller;
                         }
                     
-                    (new firstFilterClassName).filter(request, response);
+                    (new firstFilterClassName()).filter(request, response);
             }
     
 
