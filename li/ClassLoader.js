@@ -18,6 +18,7 @@ var util = require('util');
 function ClassLoader(){
 	var DEPLOY_PATH="./deploy/";
 	var scripts={};
+    var classes={};
 	/**
 	 * TODO: create utils for writing/deleting directories and files
 	 */
@@ -46,6 +47,7 @@ function ClassLoader(){
 		//TODO: write recursive directory clearing
 		},
         buildJsSource:function(source){
+            // TODO: generalize following regexp
             var importRegexp = /IO.import\("(.*?)"\)/g;
     		var importArray = source.match(importRegexp);
 			if (importArray) {
@@ -59,7 +61,6 @@ function ClassLoader(){
             }
 		,loadJsSource: function(path){
 			var source = fs.readFileSync(path).toString();
-			// TODO: generalize following regexp
 			source=this.buildJsSource(source);
 			return source;
 		}
@@ -85,17 +86,33 @@ function ClassLoader(){
 			}
             return scripts[path];
         }
+        ,getClassFromContext:function(path, context){
+                var className = this.getClassName(path);
+                if(!context[className]){
+                    this.getScript(path).runInContext(context);
+                }
+                if(!context[className]){
+                    throw new Error("Can not find " + className + " in "+ path);
+                    return false;
+                }
+                return context[className];
+            }
         ,
 		getClass: function(path, context){
-			this.getScript(path);
-			if(!context){
-				context={console:console,require:require};
-			}
-			scripts[path].runInNewContext(context);
-			var className = path.split("/")[path.split("/").length-1].replace(/\.js/,"");
-			
-			return context[className];
-		}
+			if(!classes[path]){
+                this.getScript(path);
+			    if(!context){
+    				context={console:console,require:require,util:util};
+    			}
+    			scripts[path].runInNewContext(context);
+            var className = this.getClassName(path);
+			classes[path]=context[className];
+            }
+            return classes[path];
+		},
+        getClassName: function(path){
+            return path.split("/")[path.split("/").length-1].replace(/\.js/,"");
+            }
 	};
 }
 

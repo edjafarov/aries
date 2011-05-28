@@ -69,7 +69,7 @@ var ClassLoader=require(CFG.ClassLoader);
  */
 var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
-
+/*
 var RequestContextBuilder = function(){
 	var resolvedController = null;
     var resolvedModel = null;
@@ -80,46 +80,150 @@ var RequestContextBuilder = function(){
 		error:function(){
 		}
 	};
-};
+};*/
 
 var FlowDispatcher = function(requestContextBuilder){
 	
-    var filtersQueue=[];
-    var interceptorsQueue=[];
+    
+    var flowQueue="";
+    var flowQueueScript=null;
+    
     var filters=[];
     var interceptors=[];
-
+    
+       var SourceBuilder=function(className, source){
+            var changedSource=source;
+            return {
+                addPublicMethod:function(method, context){
+                        var strigifiedMethod=method.toString();
+                        for(va in context){
+                            //TODO: potentially buggable
+                                var regX=new RegExp(va, "g");
+                                strigifiedMethod=strigifiedMethod.replace(regX,context[va]);
+                            }
+                        var methodName=strigifiedMethod.match(/function\s*(.*?)\s*\(/)[1];
+                        changedSource=[changedSource, "\n", className , ".prototype.",
+                        methodName,"=", strigifiedMethod,"\n"].join("");
+                        return this;
+                },
+                addStaticMethod:function(method,context){
+                        var strigifiedMethod=method.toString();
+                        for(va in context){
+                            //TODO: potentially buggable
+                                var regX=new RegExp(va, "g");
+                                strigifiedMethod=strigifiedMethod.replace(regX,context[va]);
+                            }                        
+                        var methodName=strigifiedMethod.match(/function\s*(.*?)\s*\(/)[1];
+                        changedSource=[changedSource, "\n", className , ".",
+                        methodName,"=", strigifiedMethod,"\n"].join("");
+                        return this;                    
+                    }
+                ,
+                    toString:function(){
+                       return changedSource;
+                }
+            }
+        };
+    
+    
+    function ControllerResolver(request, response){
+            var urlObj=url.parse(request.url, true);
+            var resolvedUrl=UrlResolver.resolve(urlObj.pathname);
+            var controllerPath=resolvedUrl.inFile;
+            var controllerClass=ClassLoader.getClass(controllerPath, {
+                    console:console,
+					ARIES:ARIES
+			});
+            return controllerClass;
+    }
+    
+    var DispatcherContext=vm.createContext({
+        console:console,
+        vm:vm,
+        require:require,
+        ARIES:getContext().ARIES,
+        util:util,
+        url:urlModule,
+        UrlResolver:UrlResolver,
+        ClassLoader:ClassLoader
+        });
+ 
+    
 
 	return {
 		initialize:function(){
-            for(var i=0; i<filters.length; i++){
-                    filtersQueue.push(ClassLoader.getScript(filters[i]));
+            flowQueue+=ControllerResolver.toString()+"\n";
+            for(var i=0; i<filters.length-1; i++){
+                var nextItemClassName=ClassLoader.getClassName(filters[i+1]);
+                var currentItemClassName=ClassLoader.getClassName(filters[i]);
+                var currentClassSource=ClassLoader.loadJsSource(filters[i]);
+                var itemSource=SourceBuilder(currentItemClassName,currentClassSource);
+                itemSource.addPublicMethod(
+                    function doNext(req, res){
+                        (new nextItemClassName()).filter(req,res);
+                    }
+                    ,{nextItemClassName:nextItemClassName});
+                 
+                flowQueue+=itemSource.toString();
+            }
+            var currentItemClassName=ClassLoader.getClassName(filters[filters.length-1]);
+            var currentClassSource=ClassLoader.loadJsSource(filters[filters.length-1]);
+                var itemSource=SourceBuilder(currentItemClassName,currentClassSource);
+                itemSource.addPublicMethod(function doNext(req, res){
+                        var controller=ControllerResolver(req, res);
+                        controller.prototype.doNext = function(req, res){
+                                (new firstInterceptor()).intercept(req, res);
+                            }
+                            new controller(req, res);
+                    },{firstInterceptor: ClassLoader.getClassName(interceptors[0])});
+/*                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){\n"+
+                "var controller=ControllerResolver(req,res);\n"+
+                "controller.prototype.doNext=function(req, res){ (new "+ClassLoader.getClassName(interceptors[0])+").intercept(req,res); }\n"+
+                "new controller(req, res);\n"
+                +"}\n";*/
+            
+            flowQueue+=itemSource.toString();
+           
+            for(var i=0; i<interceptors.length-1; i++){
+                var nextItemClassName=ClassLoader.getClassName(interceptors[i+1]);
+                var currentItemClassName=ClassLoader.getClassName(interceptors[i]);
+                var currentClassSource=ClassLoader.loadJsSource(interceptors[i]);
+                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){"+
+                "(new "+nextItemClassName+"()).intercept(req,res);"
+                +"}";
+                flowQueue+="\n"+currentClassSource;                
                 }
-                
-            for(i=0; i<interceptors.length; i++){
-                    interceptorsQueue.push(ClassLoader.getScript(interceptors[i]));
-                } 
-            for(i=interceptorsQueue.length-1;i=0;i--){
-                    interceptorsQueue.runInNewContext
-                }
-                
+                var currentItemClassName=ClassLoader.getClassName(interceptors[interceptors.length-1]);
+                var currentClassSource=ClassLoader.loadJsSource(interceptors[interceptors.length-1]);
+                currentClassSource+="\n"+currentItemClassName+".prototype.doNext=function(req,res){"+
+                ""
+                +"}";
+                flowQueue+="\n"+currentClassSource;            
+            
+            this.flowQueueScript=ClassLoader.getScriptFromSource(flowQueue, "./flowQueue.js");
+            return this.flowQueueScript;
         },
-        pushToFlow:function(item, index){
-			/*TODO: validate `item` for being instance of Flgit owItem  */
-			flowQueue.splice(index, 0, item);
-		},
         dispatch:function(request, response){
-    		var resolvedController = ControllerResolver.resolve(request);/*TODO:implement ControllerResolver*/
-			if(!resolvedController){
-				throw new Error("404 controller was not resolved");
-			}
-
-		}
-		
+            this.flowQueueScript.runInContext(DispatcherContext);
+            (new DispatcherContext[ClassLoader.getClassName(filters[0])]()).filter(request, response);
+            
+		},
+        setFilters:function(filterArr){
+            filters=filterArr;
+        },
+        setInterceptors:function(interceptorsArr){
+            interceptors=interceptorsArr;
+        }
 	};
 };
 
-var flowDispatcher = FlowDispatcher(RequestContextBuilder);
+var flowDispatcher = FlowDispatcher(null);
+
+flowDispatcher.setFilters(CFG.filters);
+flowDispatcher.setInterceptors(CFG.interceptors);
+
+var ss=flowDispatcher.initialize();
+
 
 
 function appServer(request, response){
@@ -226,7 +330,7 @@ function getContext(){
 
 
 for(var i=0; i<CFG.filters.length; i++){
-	requestQueue.push(getFilter(CFG.filters[i]));
+	/*requestQueue.push(getFilter(CFG.filters[i]));*/
 	/**
 	 * Filters are inherit event emitters to be able to emmit events. That makes possible to write them in
 	 * asynchronus style. Filters should implement method "filter" and fire end event than all job will be done.
@@ -236,10 +340,11 @@ for(var i=0; i<CFG.filters.length; i++){
 /**
  * Set up handlers on requestQueue
  */
+ /*
 for(var i=0; i<requestQueue.length; i++){
 	if(requestQueue[i+1]){
 		var temporary=requestQueue[i+1];
-		requestQueue[i].on("end", function(request, response){/**following anonymous function is necessary because scope is sharing otherwise*/
+		requestQueue[i].on("end", function(request, response){/**following anonymous function is necessary because scope is sharing otherwise* /
 			temporary["filter"](request, response);
 			});
 	}else{
@@ -257,7 +362,7 @@ for(var i=0; i<requestQueue.length; i++){
  * @param request
  * @param response
  * @return
- */
+ * /
 function startServerQueue(request, response){
 	if(requestQueue.length==0){
 		appServer(request, response);
@@ -265,10 +370,11 @@ function startServerQueue(request, response){
 		requestQueue[0]["filter"](request, response);
 	}
 }
+*/
 
  http.createServer(function (request, response) {
 	 
-	 startServerQueue(request, response);
+	flowDispatcher.dispatch(request, response);
 
  }).listen(process.env.C9_PORT);
 
