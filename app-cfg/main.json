@@ -18,6 +18,7 @@
 ,"autoconfig":true
 ,"UrlResolver":"./li/DynamicUrlResolver.js"
 ,"ClassLoader":"./li/ClassLoader.js"
+,"Dispatcher":"./li/Dispatchers/SimpleDispatcher.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
 				,"./implementation.js"
