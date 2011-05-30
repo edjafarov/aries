@@ -30,6 +30,8 @@ console.debug(CFG);
 console.debug("*** starting " + CFG.name + " webapp version " + CFG.ver + " ***");
 
 var urlMappings={};
+
+
 console.log("parsing urlMappings....\n");
 
 /**
