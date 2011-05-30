@@ -1,12 +1,11 @@
-
 function PostFilter(){
-	
+
 }
 
 PostFilter = ARIES.Extend(PostFilter).by(EventEmitter);
 
 PostFilter.prototype.filter=function(request,response){
-	console.debug("Post filter filtering");
+    console.debug("Post filter filtering");
 	var content="";
 	if (request.method === "POST") {
 		that=this;
