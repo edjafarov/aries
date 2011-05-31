@@ -10,9 +10,6 @@ var eventsModule = require('events');
 var querystring = require('querystring');
 require('./3rdPaty/log4js/log4js.js')();
 
-
-
-
 /**
  *Read configuration:
  * @params
@@ -85,22 +82,11 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
 );
 
 
-var flowDispatcher = FlowDispatcher(null);
+var flowDispatcher = FlowDispatcher();
 
 flowDispatcher.setFilters(CFG.filters);
 flowDispatcher.setInterceptors(CFG.interceptors);
-
-var ss=flowDispatcher.initialize();
-
-
-
-/**
- * request queue variable takes all tasks to handle inside. Represents Flow of request.
- */
-
-
-
-
+flowDispatcher.initialize();
 
 
  http.createServer(function (request, response) {

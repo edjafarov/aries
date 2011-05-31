@@ -1,0 +1,5 @@
+AriesNode is a web server.
+features:
+    * configuring using annotations
+    * asynchronous
+    * flexible
