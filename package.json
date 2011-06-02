@@ -1,0 +1,15 @@
+{
+    "name": "AriesNode",
+    "author":"Eldar Djafarov <eldar@djafarov.com>",
+    "version": "0.0.1",
+    "dependencies":{
+        "log4js":"0.2.x"
+        },
+    "devDependencies":{
+        "vows":"0.5.x"
+        },        
+    "scripts": {
+        "start": "node ./main.js"
+    },
+    "main":"./main.js"
+}
