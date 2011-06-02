@@ -16,9 +16,9 @@
 ]
 ,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
 ,"autoconfig":true
-,"UrlResolver":"./lib/DynamicUrlResolver.js"
-,"ClassLoader":"./lib/ClassLoader.js"
-,"Dispatcher":"./lib/Dispatchers/SimpleDispatcher.js"
+,"UrlResolver":"./li/DynamicUrlResolver.js"
+,"ClassLoader":"./li/ClassLoader.js"
+,"Dispatcher":"./li/Dispatchers/SimpleDispatcher.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
 				,"./implementation.js"
