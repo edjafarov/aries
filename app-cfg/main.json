@@ -8,6 +8,8 @@
 ,"filters":[
 	"./filters/PostFilterNew.js"
 	,"./filters/GetFilterNew.js"
+    ,"./filters/TestNewFilter.js"
+    ,"./filters/TestNew1Filter.js"
 ]
 ,"interceptors":[
     "./interceptors/TestInterceptor.js",
@@ -18,7 +20,7 @@
 ,"autoconfig":true
 ,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"./lib/ClassLoader.js"
-,"Dispatcher":"./lib/Dispatchers/SimpleDispatcher.js"
+,"Dispatcher":"./lib/Dispatchers/ContextBoundedDispatcher.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
 				,"./implementation.js"
