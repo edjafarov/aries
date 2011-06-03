@@ -1,4 +1,4 @@
-IO.import("./controllers/page");
+//IOdd.import("./controllers/page");
 
 /**
  *@class
@@ -13,7 +13,7 @@ function simplePage(req,res){
     this.doNext(req,res);
 }
 
-simplePage = ARIES.Extend(simplePage).by(page);
+//simplePage = ARIES.Extend(simplePage).by(page);
 
 /**
 * @RequestMapping(value="/tryIt/{dyna}/{gona}/{topa}")

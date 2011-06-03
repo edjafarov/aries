@@ -86,7 +86,8 @@ var flowDispatcher = FlowDispatcher();
 
 flowDispatcher.setFilters(CFG.filters);
 flowDispatcher.setInterceptors(CFG.interceptors);
-flowDispatcher.initialize();
+flowDispatcher.setViewResolver(CFG.ViewResolver);
+
 
 
  http.createServer(function (request, response) {

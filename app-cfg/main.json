@@ -9,7 +9,6 @@
 	"./filters/PostFilterNew.js"
 	,"./filters/GetFilterNew.js"
     ,"./filters/TestNewFilter.js"
-    ,"./filters/TestNew1Filter.js"
 ]
 ,"interceptors":[
     "./interceptors/TestInterceptor.js",
@@ -21,6 +20,7 @@
 ,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"./lib/ClassLoader.js"
 ,"Dispatcher":"./lib/Dispatchers/ContextBoundedDispatcher.js"
+,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
 				,"./implementation.js"
