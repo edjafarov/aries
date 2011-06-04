@@ -82,12 +82,12 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
 );
 
 
-var flowDispatcher = FlowDispatcher();
+var flowDispatcher = new FlowDispatcher();
 
-flowDispatcher.setFilters(CFG.filters);
-flowDispatcher.setInterceptors(CFG.interceptors);
-flowDispatcher.setViewResolver(CFG.ViewResolver);
-
+flowDispatcher.filters = CFG.filters;
+flowDispatcher.interceptors = CFG.interceptors;
+flowDispatcher.viewResolver = CFG.ViewResolver;
+flowDispatcher.init();
 
 
  http.createServer(function (request, response) {
