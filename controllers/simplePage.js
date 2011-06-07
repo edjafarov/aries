@@ -1,4 +1,4 @@
-//IOdd.import("./controllers/page");
+IO.import("./controllers/page");
 
 /**
  *@class
@@ -9,8 +9,8 @@
 function simplePage(req,res){
 	this.title="simplePageTitle";
 	this.content="Hallo ariesJs";
-    //this.setView("simpleView.js");
-  //  this.doNext(req,res);
+  //  this.setView("simpleView.js");
+//    this.doNext(req,res);
 }
 
 //simplePage = ARIES.Extend(simplePage).by(page);

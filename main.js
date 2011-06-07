@@ -69,6 +69,7 @@ var ClassLoader=require(CFG.ClassLoader);
 var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
 
 
+
 var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
         console:console,
         vm:vm,
@@ -82,13 +83,14 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
 );
 
 
+
+
 var flowDispatcher = new FlowDispatcher();
 
 flowDispatcher.filters = CFG.filters;
 flowDispatcher.interceptors = CFG.interceptors;
 flowDispatcher.viewResolver = CFG.ViewResolver;
 flowDispatcher.init();
-
 
  http.createServer(function (request, response) {
 	flowDispatcher.dispatch(request, response);

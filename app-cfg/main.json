@@ -19,7 +19,7 @@
 ,"autoconfig":true
 ,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"./lib/ClassLoader.js"
-,"Dispatcher":"./lib/Dispatchers/StatelessDispatcher.js"
+,"Dispatcher":"./lib/Dispatchers/ContextBoundedDispatcher.js"
 ,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
 ,"envContext":["./ariesjs.js"
 				,"./zparse.js"
