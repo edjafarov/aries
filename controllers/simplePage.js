@@ -1,4 +1,4 @@
-IO.import("./controllers/page");
+//IO*.import("./controllers/page");
 
 /**
  *@Controller 
@@ -18,8 +18,9 @@ function simplePage(){
 simplePage.prototype.init = function (/**@test*/ response, dyna, request, /**@test1*/ topa, gona) {
 	var form = ["<form action='/tryIt/rrr/ttt/yyy?test=tropo&guest=mono' method='post'>",
 	"<input type='hidden' name='field1' value='this ia hidden field'/> <input name='field2' type='text' value=''/><input type='submit'/></form>"].join('');
-	this.content="Hallo Dude! this Is dynamic test: "+dyna +" be nice with " + topa +" because "+gona + form;
-
+	//request.content="Hallo Dude! this Is dynamic test: "+dyna +" be nice with " + topa +" because "+gona + form;
+    console.error(dyna+" " + topa + " " +gona );
+    //this.doNext(request, response);
 };
 
 /**
