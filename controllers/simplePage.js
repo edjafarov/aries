@@ -1,12 +1,9 @@
 IO.import("./controllers/page");
 
 /**
- *@class
  *@Controller 
- *@Model
- *@RequestMapping(value="/test")
  */
-function simplePage(req,res){
+function simplePage(){
 	this.title="simplePageTitle";
 	this.content="Hallo ariesJs";
   //  this.setView("simpleView.js");
@@ -25,3 +22,8 @@ simplePage.prototype.init = function (/**@test*/ response, dyna, request, /**@te
 
 };
 
+/**
+* @RequestMapping(value="/tryIto/{dyna}/{gona}/{topa}")
+*/
+simplePage.prototype.initStatic = function (test){
+    }

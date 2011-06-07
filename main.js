@@ -66,7 +66,7 @@ var ClassLoader=require(CFG.ClassLoader);
 /**
  * Set Up Url resolver
  */
-var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings})();
+var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings, console:console, util:util})();
 
 
 
