@@ -2,18 +2,18 @@
 "name":"Test App"
 ,"ver":"0.1"
 ,"urlMapping":[
-	"./app-cfg/url-mapping.json",
-	"./app-cfg/auto-urlmapping.json"
+	"./src/app-cfg/url-mapping.json",
+	"./src/app-cfg/auto-urlmapping.json"
 ]
 ,"filters":[
-	"./filters/PostFilterNew.js"
-	,"./filters/GetFilterNew.js"
-    ,"./filters/TestNewFilter.js"
+	"./src/filters/PostFilterNew.js"
+	,"./src/filters/GetFilterNew.js"
+    ,"./src/filters/TestNewFilter.js"
 ]
 ,"interceptors":[
-    "./interceptors/TestInterceptor.js",
-    "./interceptors/DaoInterceptor.js",
-    "./interceptors/MVCInterceptor.js"
+    "./src/interceptors/TestInterceptor.js",
+    "./src/interceptors/DaoInterceptor.js",
+    "./src/interceptors/MVCInterceptor.js"
 ]
 ,"jsDocToolkit":"./3rdPaty/node-jsdoc-toolkit/app/"
 ,"autoconfig":true

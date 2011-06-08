@@ -1,5 +1,5 @@
 var CONTROLLERS_PATH = "./controllers/";
-var APP_CFG_PATH = "./app-cfg/";
+var APP_CFG_PATH = "./src/app-cfg/";
 
 var http = require('http');
 var fs = require('fs');
@@ -33,9 +33,9 @@ console.log("parsing urlMappings....\n");
  * CONFIGURATION LOADING
  */
 if(CFG.autoconfig){ /* Auto configuration parsing */
-	fs.writeFileSync("./app-cfg/auto-urlmapping.json", "{}");
+	fs.writeFileSync("./src/app-cfg/auto-urlmapping.json", "{}");
 	var jsdoc=require(CFG.jsDocToolkit+"noderun.js");
-	jsdoc.jsdoctoolkit.init(["-c=./app-cfg/autoconfig.conf"]);
+	jsdoc.jsdoctoolkit.init(["-c=./src/app-cfg/autoconfig.conf"]);
 }
 
 
