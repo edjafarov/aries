@@ -1,0 +1,53 @@
+{/**
+ * Application Name
+ */
+"name":"Aries Based node app"
+/**
+ * Application Version
+ */
+,"ver":"x.x.x"
+/**
+ * url - controller mappings configurations files
+ * url-mapping.json - default file for custom configurations (optional)
+ */
+,"urlMappingConfig":["./src/app-cfg/url-mapping.json"]
+/**
+ * Filters are executed before controllers in request flow.
+ * for each request all filters are called sequentally.
+ * By default Get/Post normalization filters are called.
+ */
+,"filters":["./src/filters/GetFilterNew.js","./src/filters/PostFilterNew.js"]
+/**
+ * Interceptors are executed after controller but before view resolver.
+ */
+,"interceptors":[]
+/**
+ * Url resolver resolves controller based on current url in request.
+ * By default DynamicUrlResolver is used.
+ */
+,"UrlResolver":"./lib/DynamicUrlResolver.js"
+/**
+ * Abtsraction for js Source vitrual machine runner. 
+ * More flexible than "require" (probably should be hardcoded)
+ */
+,"ClassLoader":"ClassLoader"
+/**
+ * Dispatcher is an abstraction for request flow. It could have several 
+ * implementations. Each has it's own pros and cons in terms of context 
+ * accessibility, perfomance and memory evviciency.
+ * default is StatelessDispatcher
+ */
+,"Dispatcher":"./lib/Dispatchers/StatelessDispatcher.js"
+/**
+ * View resolver controlles how exactly view will be processed.
+ * Can be customized to use any template engine.
+ * default SimpleViewResolver
+ */
+,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
+/**
+ * Configuration could be resolved wit custom configuration resolvers.
+ * Custom config resolvers could change basic configuration in any way.
+ * Custom resolvers have priority over default of appspecific configuration.
+ * by default AnnotationConfigResolver is enabled.
+ */
+,"configResolvers" : ["./ConfigResolvers/UrlMappingConfigResolver.js"]}

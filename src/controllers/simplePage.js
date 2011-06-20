@@ -26,5 +26,8 @@ simplePage.prototype.init = function (/**@test*/ response, dyna, request, /**@te
 /**
 * @RequestMapping(value="/tryIto/{dyna}/{gona}/{topa}")
 */
-simplePage.prototype.initStatic = function (test){
+simplePage.prototype.initStatic = function (/**@test*/ test){
     }
+    
+simplePage.prototype.init = function (/**@test*/ response, dyna, request, /**@test1*/ topa, gona) {
+}    

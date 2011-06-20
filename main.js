@@ -1,6 +1,7 @@
 var CONTROLLERS_PATH = "./controllers/";
 var APP_CFG_PATH = "./src/app-cfg/";
 
+var jsSCP = require('jsSourceCodeParser');
 var http = require('http');
 var fs = require('fs');
 var urlModule = require('url');
@@ -17,7 +18,12 @@ require('./3rdPaty/log4js/log4js.js')();
  * ver [String] application version
  * urlMapping [Array<String>] array of url mapping filenames 
  */
+ 
+CFG = require("./lib/ConfigReader.js")(APP_CFG_PATH);
 
+console.log(util.inspect(CFG));
+
+/*
 var CFG_FILE = fs.readFileSync(APP_CFG_PATH + "main.json");
 console.log("main.json config loading....");
 console.debug(CFG_FILE.toString());
@@ -26,13 +32,15 @@ var CFG=JSON.parse(CFG_FILE);
 console.debug(CFG);
 console.debug("*** starting " + CFG.name + " webapp version " + CFG.ver + " ***");
 
+*1/
+
 var urlMappings={};
 console.log("parsing urlMappings....\n");
 
 /**
  * CONFIGURATION LOADING
- */
-if(CFG.autoconfig){ /* Auto configuration parsing */
+ *1/
+if(CFG.autoconfig){ /* Auto configuration parsing *1/
 	fs.writeFileSync("./src/app-cfg/auto-urlmapping.json", "{}");
 	var jsdoc=require(CFG.jsDocToolkit+"noderun.js");
 	jsdoc.jsdoctoolkit.init(["-c=./src/app-cfg/autoconfig.conf"]);
@@ -59,6 +67,8 @@ for(cfgMapping in CFG.urlMapping){
 		}
 	}
 }
+*/
+
 /**
  * Set Up Class Loader
  */
