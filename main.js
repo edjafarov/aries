@@ -21,53 +21,7 @@ require('./3rdPaty/log4js/log4js.js')();
  
 CFG = require("./lib/ConfigReader.js")(APP_CFG_PATH);
 
-console.log(util.inspect(CFG));
 
-/*
-var CFG_FILE = fs.readFileSync(APP_CFG_PATH + "main.json");
-console.log("main.json config loading....");
-console.debug(CFG_FILE.toString());
-console.log("parsing main.json config....");
-var CFG=JSON.parse(CFG_FILE);
-console.debug(CFG);
-console.debug("*** starting " + CFG.name + " webapp version " + CFG.ver + " ***");
-
-*1/
-
-var urlMappings={};
-console.log("parsing urlMappings....\n");
-
-/**
- * CONFIGURATION LOADING
- *1/
-if(CFG.autoconfig){ /* Auto configuration parsing *1/
-	fs.writeFileSync("./src/app-cfg/auto-urlmapping.json", "{}");
-	var jsdoc=require(CFG.jsDocToolkit+"noderun.js");
-	jsdoc.jsdoctoolkit.init(["-c=./src/app-cfg/autoconfig.conf"]);
-}
-
-
-for(cfgMapping in CFG.urlMapping){
-	console.log("reading filename " + CFG.urlMapping[cfgMapping]);
-	URL_MAPPING_FILE = fs.readFileSync( CFG.urlMapping[cfgMapping]);
-	console.debug("parsing " + CFG.urlMapping[cfgMapping]);
-	URL_MAPPING = JSON.parse(URL_MAPPING_FILE);
-	for(url in URL_MAPPING){
-		try{
-			var stats=fs.lstatSync(URL_MAPPING[url].inFile);
-			if(stats.isFile()){
-				console.debug("url: " + url + " mapped to " + URL_MAPPING[url].inFile + "class");
-				urlMappings[url] = URL_MAPPING[url];
-			}else{
-				throw new Error("trying to map url: " + url + " to " + URL_MAPPING[url] + 
-				" failed - file '" + URL_MAPPING[url] + "' not found");
-			}
-		}catch(e){
-			console.error(e);
-		}
-	}
-}
-*/
 
 /**
  * Set Up Class Loader
@@ -76,10 +30,10 @@ var ClassLoader=require(CFG.ClassLoader);
 /**
  * Set Up Url resolver
  */
-var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{urlMappings:urlMappings, console:console, util:util})();
+var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{CFG:CFG, console:console, util:util})();
 
 
-
+console.log("Set up flow dispatcher...");
 var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
         console:console,
         vm:vm,
@@ -100,11 +54,13 @@ var flowDispatcher = new FlowDispatcher();
 flowDispatcher.filters = CFG.filters;
 flowDispatcher.interceptors = CFG.interceptors;
 flowDispatcher.viewResolver = CFG.ViewResolver;
+console.log("Init flow dispatcher...");
 flowDispatcher.init();
 
  http.createServer(function (request, response) {
 	flowDispatcher.dispatch(request, response);
  }).listen(process.env.C9_PORT);
 
- console.log('Server running at http://127.0.0.1:8124/');
+ console.log('Aries server running at http://127.0.0.1:'+process.env.C9_PORT);
+ 
 
