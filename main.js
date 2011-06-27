@@ -1,7 +1,7 @@
 var CONTROLLERS_PATH = "./controllers/";
 var APP_CFG_PATH = "./src/app-cfg/";
 
-var jsSCP = require('jsSourceCodeParser');
+
 var http = require('http');
 var fs = require('fs');
 var urlModule = require('url');

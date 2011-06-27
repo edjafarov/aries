@@ -1,9 +1,14 @@
 {
     "name": "AriesNode",
-    "author":"Eldar Djafarov <eldar@djafarov.com>",
+    "author":"Eldar Djafarov <djkojb@gmail.com>",
+    "contributors": [ 
+        { "name": "Eldar Djafarov", "email": "djkojb@gmail.com" }
+    ],
     "version": "0.0.1",
     "dependencies":{
-        "log4js":"0.2.x"
+        "log4js":"0.2.x",
+        "ClassLoader":"0.0.x",
+        "jsSourceCodeParser":"0.0.x"
         },
     "devDependencies":{
         "vows":"0.5.x"

@@ -22,6 +22,10 @@
  */
 ,"interceptors":[]
 /**
+ * Application source folder to scan for annotations.
+ */
+,"appSrc":"./src"
+/**
  * Url resolver resolves controller based on current url in request.
  * By default DynamicUrlResolver is used.
  */
@@ -50,4 +54,7 @@
  * Custom resolvers have priority over default of appspecific configuration.
  * by default AnnotationConfigResolver is enabled.
  */
-,"configResolvers" : ["./ConfigResolvers/UrlMappingConfigResolver.js"]}
+,"configResolvers" : [
+    "./ConfigResolvers/UrlMappingConfigResolver.js"
+    ,"./ConfigResolvers/AnnotationConfigResolver.js"]
+    }
