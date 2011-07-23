@@ -183,23 +183,17 @@ var ARIES = new (function (){
 
 
 /**** imported ****/
-function ContextBoundedDispatcher(){
-
+function ContextBoundedDispatcher(CFG){
+    this.filters = CFG.filters;
+    this.interceptors = CFG.interceptors;
+    this.viewResolver = CFG.ViewResolver;
 };
 
-
-ContextBoundedDispatcher.prototype.init = function(){
-    
-    }
 
 ContextBoundedDispatcher.prototype.viewResolver = null;
 ContextBoundedDispatcher.prototype.filters = [];
 ContextBoundedDispatcher.prototype.interceptors = [];
 
-/**
- * 
- * 
- */
 
 ContextBoundedDispatcher.prototype.dispatch = function dispatch(request, response){
         // resolving controller to save time. Resolved controller could be found in request.resolvedController
@@ -210,7 +204,7 @@ ContextBoundedDispatcher.prototype.dispatch = function dispatch(request, respons
             return false;
         }else{
             request.resolvedController = controller;
-            this.startRequest(request, response);
+//            this.startRequest(request, response);
         }
     }
 
