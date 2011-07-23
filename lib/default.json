@@ -41,7 +41,7 @@
  * accessibility, perfomance and memory evviciency.
  * default is StatelessDispatcher
  */
-,"Dispatcher":"./lib/Dispatchers/StatelessDispatcher.js"
+,"Dispatcher":"./lib/Dispatchers/ContextBoundedDispatcher.js"
 /**
  * View resolver controlles how exactly view will be processed.
  * Can be customized to use any template engine.

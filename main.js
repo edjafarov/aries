@@ -21,7 +21,7 @@ require('./3rdPaty/log4js/log4js.js')();
  
 CFG = require("./lib/ConfigReader.js")(APP_CFG_PATH);
 
-
+console.log(util.inspect(CFG), false, 7);
 
 /**
  * Set Up Class Loader
@@ -51,11 +51,7 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
 
 var flowDispatcher = new FlowDispatcher();
 
-flowDispatcher.filters = CFG.filters;
-flowDispatcher.interceptors = CFG.interceptors;
-flowDispatcher.viewResolver = CFG.ViewResolver;
-console.log("Init flow dispatcher...");
-flowDispatcher.init();
+
 
  http.createServer(function (request, response) {
 	flowDispatcher.dispatch(request, response);

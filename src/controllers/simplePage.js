@@ -10,7 +10,7 @@ function simplePage(){
 //    this.doNext(req,res);
 }
 
-//simplePage = ARIES.Extend(simplePage).by(page);
+simplePage = ARIES.Extend(simplePage).by(page);
 
 /**
 * @RequestMapping(value="/tryIt/{dyna}/{gona}/{topa}")

@@ -1,3 +1,6 @@
 {
-"/":{"mappingFunction":"simplePage","arguments":[],"inFile":"./src/controllers/simplePage.js"}
+"/":{"controllerClass": "Sample",
+        "controllerMethod": null,
+        "filePath": "./src/controllers/Sample.js",
+        "arguments": []}
 }
