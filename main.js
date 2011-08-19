@@ -49,7 +49,7 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
 
 
 
-var flowDispatcher = new FlowDispatcher();
+var flowDispatcher = new FlowDispatcher(CFG);
 
 
 

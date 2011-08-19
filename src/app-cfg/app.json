@@ -8,6 +8,6 @@
 ]
 ,"UrlResolver":"./lib/SimpleUrlResolver.js"
 ,"ClassLoader":"ClassLoader"
-,"Dispatcher":"./lib/Dispatchers/StatelessDispatcher.js"
+,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
 ,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
 }
