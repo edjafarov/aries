@@ -58,6 +58,7 @@
  *	following syntaxis:
  *	DomElement||<DomElement> A(id||xpath||jquery css selectors) - return elements
  */
+ 
 var ARIES = new (function (){
     /**
      * Private namespace.
