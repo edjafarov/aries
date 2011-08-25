@@ -6,7 +6,7 @@
     "./src/interceptors/DaoInterceptor.js",
     "./src/interceptors/MVCInterceptor.js"
 ]
-,"UrlResolver":"./lib/SimpleUrlResolver.js"
+,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"ClassLoader"
 ,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
 ,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"

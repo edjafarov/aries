@@ -30,7 +30,7 @@ var ClassLoader=require(CFG.ClassLoader);
 /**
  * Set Up Url resolver
  */
-var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{CFG:CFG, console:console, util:util})();
+var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{CFG:CFG, console:console, util:util, urlModule:urlModule})();
 
 
 console.log("Set up flow dispatcher...");

@@ -30,7 +30,6 @@ function DynamicUrlResolver() { //cacheble dynamic low perfomance
                     }
                 }
                 
-                regexpConfig.mappingMethodName = regexpConfig.mappingFunction.split("#")[1];
                 
                 //change {} -> () to fit regexp pattern
                 cachedRegexp[configUrl.replace(regxp, "(\\w+?)")] = regexpConfig;
@@ -39,17 +38,19 @@ function DynamicUrlResolver() { //cacheble dynamic low perfomance
         }
     }
 
-    precache(urlMappings);
+    precache(CFG.urlMappings);
     
     return {
         bindReq: function (resolved, request, response) {
             if (resolved.autoDynaMap) {
-                resolved.argumentsToPass[resolved.autoDynaMap["request"]] = request;
-                resolved.argumentsToPass[resolved.autoDynaMap["response"]] = response;
+                resolved.resolvedArguments[resolved.autoDynaMap["request"]] = request;
+                resolved.resolvedArguments[resolved.autoDynaMap["response"]] = response;
             }
             return resolved;
         },
-        resolve: function (url, request, response) {
+        resolve: function (request, response) {
+            var urlObj = urlModule.parse(request.url, true);
+            var url = urlObj.pathname;
             var resolved = null;
             if (cache[url]) {
                 return this.bindReq(cache[url], request, response);
@@ -59,9 +60,9 @@ function DynamicUrlResolver() { //cacheble dynamic low perfomance
                 var resolveMatch = url.match(new RegExp("^" + configUrl + "/?$"));
                 if (resolveMatch) {
                     resolved = cachedRegexp[configUrl];
-                    resolved.argumentsToPass = [];
+                    resolved.resolvedArguments = [];
                     for (var k = 1; k < resolveMatch.length; k++) {
-                        resolved.argumentsToPass[resolved.autoDynaMap[k - 1]] = resolveMatch[k];
+                        resolved.resolvedArguments[resolved.autoDynaMap[k - 1]] = resolveMatch[k];
                     }
                 }
             }
