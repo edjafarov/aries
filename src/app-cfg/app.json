@@ -2,12 +2,10 @@
 "name":"Test App"
 ,"ver":"0.1"
 ,"interceptors":[
-    "./src/interceptors/TestInterceptor.js",
-    "./src/interceptors/DaoInterceptor.js",
-    "./src/interceptors/MVCInterceptor.js"
+    "./src/interceptors/DaoInterceptor.js"
 ]
 ,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"ClassLoader"
 ,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
-,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
+,"ViewResolver":"./lib/ViewResolvers/EjsViewResolver.js"
 }

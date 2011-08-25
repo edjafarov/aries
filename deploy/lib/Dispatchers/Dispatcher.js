@@ -121,7 +121,7 @@ Dispatcher.prototype.init = function init() {
     ClassLoader.getScript(this.viewResolver).runInContext(this.dispatcherContext);
     /**
      * Build a chain of Filters->Controller->Interceptors->ViewResolver
-     * 
+     * TODO: put the case if we have no filters
      */
     for (var i = 0; i < this.filters.length - 1; i++) {
         var current = ClassLoader.getClassName(this.filters[i]);
@@ -130,7 +130,7 @@ Dispatcher.prototype.init = function init() {
     }
     
     this.dispatcherContext[ClassLoader.getClassName(this.filters[this.filters.length - 1])].prototype.doNext = this.getDoNextController(ClassLoader.getClassName(this.interceptors[0]));
-    
+    //TODO: put the case if we have no interceptors
     for (var i = 0; i < this.interceptors.length - 1; i++) {
         var current = ClassLoader.getClassName(this.interceptors[i]);
         var next = ClassLoader.getClassName(this.interceptors[i + 1]);

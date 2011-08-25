@@ -13,7 +13,6 @@ function HalloWorldController(req,res){
 HalloWorldController.prototype.sayHallo = function(request, response, test){
     this.setView("simpleView.js");
     request.content = test;
-
     this.doNext(request,response);    
-    }
+};
 
