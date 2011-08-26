@@ -8,7 +8,8 @@
     "dependencies":{
         "log4js":"0.2.x",
         "ClassLoader":"0.0.x",
-        "jsSourceCodeParser":"0.0.x"
+        "jsSourceCodeParser":"0.0.x",
+        "ejs":"0.4.3"
         },
     "devDependencies":{
         "vows":"0.5.x"

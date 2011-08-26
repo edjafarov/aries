@@ -14,9 +14,8 @@
 /**
  * Filters are executed before controllers in request flow.
  * for each request all filters are called sequentally.
- * By default Get/Post normalization filters are called.
  */
-,"filters":["./lib/filters/GetFilterNew.js","./lib/filters/PostFilterNew.js"]
+,"filters":[]
 /**
  * Interceptors are executed after controller but before view resolver.
  */

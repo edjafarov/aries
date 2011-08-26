@@ -1,9 +1,7 @@
 {
 "name":"Test App"
 ,"ver":"0.1"
-,"interceptors":[
-    "./src/interceptors/DaoInterceptor.js"
-]
+,"interceptors":[]
 ,"UrlResolver":"./lib/DynamicUrlResolver.js"
 ,"ClassLoader":"ClassLoader"
 ,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
