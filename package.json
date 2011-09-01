@@ -15,7 +15,7 @@
         "vows":"0.5.x"
         },        
     "scripts": {
-        "start": "node ./main.js"
+        "start": "./main.js"
     },
     "main":"./main.js"
 }

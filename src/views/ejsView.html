@@ -4,7 +4,13 @@
 </head>
 <body>
 <h1>Aries Node</h1>
-<p>dynameic: <%- request.someVar %></p>
+<p>dynamic: <%- request.someVar %></p>
+<p>
+    Hi there. You are on a <b><%- request.pageName %></b> <br/>
+    in <b><%- request.sectionName %></b> section <br/>
+    with foo param set to <b><%- request.paramFoo %></b>
+    
+</p>
 <ul>
 <li><a href="/">homepage</a></li>
 <li><a href="/details/subsection">details page</a></li>

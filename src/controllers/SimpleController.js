@@ -20,12 +20,13 @@ SimpleController.prototype.homepage = function(request, response){
 
 /**
  *@RequestMapping(value="/details/{test}") 
+ * 
  */
 SimpleController.prototype.details = function(request, test , response, foo){
     this.setView("ejsView.html");
-    request.someVar = "Hi there. You are on a <b>details page</b> <br/>";
-    request.someVar += "in <b>" +  test + "</b> section <br/>";
-    request.someVar += "with foo param set to <b>" +  foo +"</b>";
+    request.pageName="details page";
+    request.sectionName = test;
+    request.paramFoo = foo;
     this.doNext(request,response);    
 };
 

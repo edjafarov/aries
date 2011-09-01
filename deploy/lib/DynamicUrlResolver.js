@@ -34,6 +34,11 @@ function DynamicUrlResolver() { //cacheble dynamic low perfomance
                         regexpConfig.autoDynaMap["response"] = j;
                         continue;
                     }
+                    
+                    if (regexpConfig.arguments[j].name == "Model") {
+                        regexpConfig.autoDynaMap["Model"] = j;
+                        continue;
+                    }                    
 
                     if (found.indexOf(j) == -1){
                         regexpConfig.unusedArguments[regexpConfig.arguments[j].name] = j;
