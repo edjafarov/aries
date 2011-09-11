@@ -6,7 +6,7 @@
     ],
     "version": "0.0.1",
     "dependencies":{
-        "log4js":"0.2.x",
+        "log4js":"0.3.8",
         "ClassLoader":"0.0.x",
         "jsSourceCodeParser":"0.0.x",
         "ejs":"0.4.3"

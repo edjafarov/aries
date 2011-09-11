@@ -9,8 +9,7 @@ var util = require('util');
 var vm = require('vm');
 var eventsModule = require('events');
 var querystring = require('querystring');
-require('./3rdPaty/log4js/log4js.js')();
-
+var logger = require('log4js').getLogger();
 
 /**
  *Read configuration:
@@ -22,7 +21,7 @@ require('./3rdPaty/log4js/log4js.js')();
  
 CFG = require("./lib/ConfigReader.js")(APP_CFG_PATH);
 
-console.log(util.inspect(CFG), false, 7);
+logger.log(util.inspect(CFG), false, 7);
 
 
 /* TODO: need to rewrite inside ClassLoader exception handling in order to resolve
@@ -47,7 +46,7 @@ var UrlResolver = ClassLoader.getClass(CFG.UrlResolver,{CFG:CFG, console:console
 
 console.log("Set up flow dispatcher...");
 var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
-        console:console,
+        console:logger,
         vm:vm,
         require:require,
         util:util,
