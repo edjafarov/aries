@@ -6,10 +6,10 @@
     ],
     "version": "0.0.1",
     "dependencies":{
-        "log4js":"0.3.8",
+        "log4js":"0.3.x",
         "ClassLoader":"0.0.x",
         "jsSourceCodeParser":"0.0.x",
-        "ejs":"0.4.3"
+        "ejs":"0.4.x"
         },
     "devDependencies":{
         "vows":"0.5.x"
