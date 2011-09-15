@@ -7,7 +7,7 @@ features:
     * flexible
 
 ##Controller example
-
+```javascript
         IO.import("./src/controllers/superController");
 
         /**
@@ -25,7 +25,7 @@ features:
             this.setView("customView.js");
             this.doNext(request, response);
         };
-
+```
 ##How to install
 It works out of the box in cloud9ide.com[http://cloud9ide.com]
 
