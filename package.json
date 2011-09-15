@@ -17,5 +17,6 @@
     "scripts": {
         "start": "./main.js"
     },
+	"bin":"./main.js",
     "main":"./main.js"
 }
