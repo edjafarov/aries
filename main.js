@@ -67,7 +67,7 @@ var flowDispatcher = new FlowDispatcher(CFG);
 
  http.createServer(function (request, response) {
 	flowDispatcher.dispatch(request, response);
- }).listen(process.env.npm_package_config_port);
+ }).listen(process.env.PORT || process.env.npm_package_config_port);
 
  console.log('Aries server running at http://'+ process.env.npm_package_config_host+':'+process.env.npm_package_config_port);
  
