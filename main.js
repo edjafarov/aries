@@ -2,7 +2,7 @@
 var CONTROLLERS_PATH = "./controllers/";
 var APP_CFG_PATH = "./src/app-cfg/";
 
-require('ClassLoader');
+
 var http = require('http');
 var fs = require('fs');
 var urlModule = require('url');
