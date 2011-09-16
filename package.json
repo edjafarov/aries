@@ -6,10 +6,10 @@
     ],
     "version": "0.0.1",
     "dependencies":{
-        "log4js":"0.3.x",
-        "ClassLoader":"0.0.x",
-        "jsSourceCodeParser":"0.0.x",
-        "ejs":"0.4.x"
+        "log4js":"0.3.9",
+        "ClassLoader":"0.0.1",
+        "jsSourceCodeParser":"0.0.1",
+        "ejs":"0.4.3"
         },
     "scripts": {
         "start": "node ./main.js"
