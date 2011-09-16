@@ -6,30 +6,42 @@ features:
     * asynchronous
     * flexible
 
-##Controller example
+##Installation
+
 ```javascript
-        IO.import("./src/controllers/superController");
-
-        /**
-         *@Controller 
-         */
-        function customController(){
-        }
-
-        customController = ARIES.Extend(customController).by(superController);
-
-        /**
-        * @RequestMapping(value="/foo/{bar}")
-        */
-        customController.prototype.someAction = function (response, bar, request) {
-            this.setView("customView.js");
-            this.doNext(request, response);
-        };
+$ npm install AriesNode
 ```
-##How to install
-It works out of the box in cloud9ide.com[http://cloud9ide.com]
 
-just run main.js 
+##Quick start
+
+just go into AriesNode directory and start server by 
+
+```javascript
+$ npm start
+//or
+$ node main.js
+```
+
+##Write simple controller
+```javascript
+IO.import("./src/controllers/superController");
+
+/**
+ *@Controller 
+ */
+function customController(){
+}
+
+customController = ARIES.Extend(customController).by(superController);
+
+/**
+* @RequestMapping(value="/foo/{bar}")
+*/
+customController.prototype.someAction = function (response, bar, request) {
+    this.setView("customView.js");
+    this.doNext(request, response);
+};
+```
 
 
 
