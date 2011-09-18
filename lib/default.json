@@ -19,7 +19,8 @@
 /**
  * Interceptors are executed after controller but before view resolver.
  */
-,"interceptors":[]
+,"preInterceptors":[]
+,"postInterceptors":[]
 /**
  * Application source folder to scan for annotations.
  */

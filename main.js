@@ -54,7 +54,8 @@ var FlowDispatcher=ClassLoader.getClass(CFG.Dispatcher,{
         url:urlModule,
         UrlResolver:UrlResolver,
         ClassLoader:ClassLoader,
-        setTimeout:setTimeout
+        setTimeout:setTimeout,
+		__dirname:__dirname
         }
 );
 

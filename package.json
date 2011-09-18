@@ -9,7 +9,8 @@
         "log4js":"0.3.9",
         "ClassLoader":"0.0.1",
         "jsSourceCodeParser":"0.0.1",
-        "ejs":"0.4.3"
+        "ejs":"0.4.3",
+		"connect":"1.7.1"
         },
     "scripts": {
         "start": "node ./main.js"
