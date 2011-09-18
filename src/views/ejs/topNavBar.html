@@ -1,0 +1,16 @@
+<div class="topbar-wrapper" style="z-index: 5;">
+    <div class="topbar" data-dropdown="dropdown">
+      <div class="topbar-inner">
+        <div class="container">
+          <h3><a href="/">Aries</a></h3>
+          <ul class="nav">
+            <li <% if(topNavBar.activeItem == "/") {%>class="active" <%}%>><a href="/">Home</a></li>
+            <li <% if(topNavBar.activeItem == "/docs") {%>class="active" <%}%>><a href="/docs">Documentation</a></li>
+            <li><a href="https://github.com/edjafarov/AriesNode">Repository</a></li>
+            <li><a href="https://github.com/edjafarov/AriesNode/issues">Bugtracker</a></li>
+            <li <% if(topNavBar.activeItem == "/about") {%>class="active" <%}%>><a href="/about">About</a></li>
+          </ul>
+        </div>
+      </div><!-- /topbar-inner -->
+    </div><!-- /topbar -->
+  </div>

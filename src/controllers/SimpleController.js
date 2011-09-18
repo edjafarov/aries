@@ -10,6 +10,7 @@ function SimpleController(request ,response){
 
 /**
  *@RequestMapping(value="/") 
+ *@Override
  */
 SimpleController.prototype.homepage = function(request, response){
     this.setView("ejsView.html");
