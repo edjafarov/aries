@@ -6,10 +6,14 @@
           <ul class="nav">
             <li <% if(topNavBar.activeItem == "/") {%>class="active" <%}%>><a href="/">Home</a></li>
             <li <% if(topNavBar.activeItem == "/docs") {%>class="active" <%}%>><a href="/docs">Documentation</a></li>
-            <li><a href="https://github.com/edjafarov/AriesNode">Repository</a></li>
-            <li><a href="https://github.com/edjafarov/AriesNode/issues">Bugtracker</a></li>
+            <li <% if(topNavBar.activeItem == "/about") {%>class="active" <%}%>><a href="/about">Getting started</a></li>
             <li <% if(topNavBar.activeItem == "/about") {%>class="active" <%}%>><a href="/about">About</a></li>
           </ul>
+		  <ul class="nav secondary-nav">
+			<li><a href="https://github.com/edjafarov/AriesNode">Commit</a></li>
+			<li><a href="https://groups.google.com/group/aries-node">Discuss</a></li>
+			<li><a>Fill a bug</a></li>
+		  </ul>
         </div>
       </div><!-- /topbar-inner -->
     </div><!-- /topbar -->
