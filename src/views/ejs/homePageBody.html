@@ -1,13 +1,87 @@
   <div class="container">
     <div class="content">
-		<h2>... is simple</h2>
-		<pre  class="prettyprint">
-/**
+		<h2>... is simple</h2> 
+<pre  class="prettyprint sh_javascript">/**
  *@RequestMapping(value="/hello-world") 
  */
-HalloWorldController.prototype.sayHallo = function(request, response){
-	response.end("Hallo world!");
-};
+HalloWorldController.prototype.sayHello = function(request, response){
+	response.end("Hello world!");
+};</pre>
+<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="/hello-world">see live</a></div>
+		<h2>Features [ver 0.0.1]</h2>
+		<h3>routing </h3>
+		<p>Routing with Aries as simple as writing comments. 
+		You just put variable name in curvy braces and put it as a parametr in your constructor. 
+		Aries dynamically assigns the value to variable.</p>
+		<pre class="prettyprint sh_javascript">
+/**
+ *@RequestMapping(value="/twitter/{userId}") 
+ */
+HalloWorldController.prototype.twitterUser = function(request, response, userId){
+	TODO:WRITE BODY
+};		
 		</pre>
+		<h3>asynchronous</h3>
+		<p>		Aries provides some magic that allow to get post and get params inside controller by just declaring 
+		those as a parameter for controller function
+</p>
+<pre  class="prettyprint sh_javascript">
+/**
+ *@RequestMapping(value="/twitter/{userId}/updates") 
+ */
+HalloWorldController.prototype.getTwittsByUserId = function(request, response, userId){
+	TODO:WRITE BODY
+};
+</pre>
+
+		<h3>smart binding</h3>
+		<p>
+		
+		Aries provides some magic that allow to get post and get params inside controller by just declaring 
+		those as a parameter for controller function</p>
+<pre  class="prettyprint sh_javascript">
+/**
+ *@RequestMapping(value="/twitter/{userId}/updates") 
+ */
+HalloWorldController.prototype.getTwittsByUserId = function(request, response, userId){
+	TODO:WRITE BODY
+};
+</pre>
+		
+		<h3>middleware</h3>
+		<p>
+		Standard request flow goes through following chain:
+		</p>
+		<p>
+		filters->controller resolver->pre controller interceptors->controller->post controller interceptors->view resolver
+which gives us flexibility of using middleware as filters, pre and post controller interceptors.
+For example we can use connect's static middleware to handle static content as a filter which is the best to handle before controller resolver.
+ To assign class as filter we just need to put Filter annotation before constructor.
+		</p>
+		<h3>there is more comming</h3>
+		<ul>
+			<li>session management</li>
+			<li>cookie support</li>
+			<li>validations handling</li>
+			<li>model binding</li>
+			<li>view caching</li>
+			<li>logger</li>
+			<li>what else would you like?</li>
+		</ul>
+		<h2>Installation</h2>
+
+		<pre class="prettyprint">npm install -g aries</pre>
+
+<p>now start server with</p>
+<pre class="prettyprint">aries-start /src</pre>
+<p>
+where src is a folder with your server
+</p><!--
+if you run aries-start - this site will be started.
+to configure port and host:		
+		-->
+		
+		
     </div>
   </div>

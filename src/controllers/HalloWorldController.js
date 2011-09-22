@@ -6,14 +6,10 @@ function HalloWorldController(req,res){
   
 }
 
-
 /**
- *@RequestMapping(value="/hello-world/{test}") 
- * @Override
+ *@RequestMapping(value="/hello-world") 
  */
-HalloWorldController.prototype.sayHallo = function(request, response, test){
-    this.setView("simpleView.js");
-    request.content = test;
-    this.doNext(request,response);    
+HalloWorldController.prototype.sayHallo = function(request, response){
+	response.end("Hello world!");
 };
 
