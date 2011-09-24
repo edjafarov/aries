@@ -19,22 +19,59 @@ HalloWorldController.prototype.sayHello = function(request, response){
  *@RequestMapping(value="/twitter/{userId}") 
  */
 HalloWorldController.prototype.twitterUser = function(request, response, userId){
-	TODO:WRITE BODY
-};		
+    var that = this;
+
+	doTwitterCall(userId, function(msg){
+		var twitResponse = JSON.parse(msg);
+				
+		that.setView("/ejs/Layout.html",
+		{
+		head:{	
+			title:"aries-node: {hallo "+ userId +"!}"
+			},
+		bodyPath:"/ejs/twitterFeedExample.html",
+		topNavBar:{activeItem:null},
+		twitResponse:twitResponse,
+		userId:userId
+		});	
+		that.doNext(request, response);				
+	})
+
+};	
 		</pre>
+<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="/twitter">see live</a></div>		
 		<h3>asynchronous</h3>
 		<p>		Aries provides some magic that allow to get post and get params inside controller by just declaring 
 		those as a parameter for controller function
 </p>
 <pre  class="prettyprint sh_javascript">
 /**
- *@RequestMapping(value="/twitter/{userId}/updates") 
+ *@RequestMapping(value="/twitter/tweets") 
  */
-HalloWorldController.prototype.getTwittsByUserId = function(request, response, userId){
-	TODO:WRITE BODY
+HalloWorldController.prototype.twitterFeed = function(request, response, twitId){
+    var that = this;
+
+	doTwitterCall(twitId, function(msg){
+		var twitResponse = JSON.parse(msg);
+				
+		that.setView("/ejs/Layout.html",
+		{
+		head:{	
+			title:"aries-node: {hallo "+ twitId +"!}"
+			},
+		bodyPath:"/ejs/twitterFeedExample.html",
+		topNavBar:{activeItem:null},
+		twitResponse:twitResponse,
+		userId:twitId
+		});	
+		that.doNext(request, response);				
+	})
+
 };
 </pre>
-
+<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="/twitter">see live</a></div>	
 		<h3>smart binding</h3>
 		<p>
 		

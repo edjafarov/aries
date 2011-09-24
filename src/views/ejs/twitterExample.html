@@ -1,0 +1,14 @@
+<div class="container">
+<div class="content">
+<form action="/twitter/tweets" method="post" >
+	<label for="twitId">put twitter name</label>
+	<div class="input">
+	<input type="text" name="twitId" id="twitId" placeholder="ex. edjafarov"/>
+	</div>
+	<div class="actions">
+	<input type="submit" class="btn primary" value="get tweets by post" />
+	<a class="btn" href="/twitter" onclick="this.href+='/'+document.getElementById('twitId').value;">get tweets by url</a>
+	</div>
+</form>
+</div>
+</div>

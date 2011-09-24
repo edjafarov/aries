@@ -1,0 +1,24 @@
+ <div class="container">
+<div class="content">
+<h2>chek out tweets from <%- userId %></h2>
+<ul class="unstyled">
+<% for (var i=0; i<twitResponse.length;i++){%>
+<li>
+<blockquote>
+<p><%- twitResponse[i].text %></p>
+<small>from <%- twitResponse[i].source %> created at <%- twitResponse[i].created_at%></small>
+</blockquote>
+</li>
+<%}%>
+</ul>
+<% if(twitResponse.length>0) {%>
+<iframe allowtransparency="true" frameborder="0" scrolling="no"
+  src="//platform.twitter.com/widgets/follow_button.html?screen_name=<%- twitResponse[0].user.screen_name%>&show_count=true"
+  style="width:300px; height:20px;"></iframe>
+<%} else {%>
+<div class="alert-message warning">
+<p><strong>Oops!</strong> no tweets from <%- userId %>. Go <a href="/twitter">back</a> and try once more.</p>
+</div>
+<%}%>
+</div>
+</div>
