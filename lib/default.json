@@ -10,7 +10,7 @@
  * url - controller mappings configurations files
  * url-mapping.json - default file for custom configurations (optional)
  */
-,"urlMappingConfig":["./src/app-cfg/url-mapping.json"]
+,"urlMappingConfig":[]
 /**
  * Filters are executed before controllers in request flow.
  * for each request all filters are called sequentally.
@@ -21,10 +21,6 @@
  */
 ,"preInterceptors":[]
 ,"postInterceptors":[]
-/**
- * Application source folder to scan for annotations.
- */
-,"appSrc":"./src"
 /**
  * Url resolver resolves controller based on current url in request.
  * By default DynamicUrlResolver is used.

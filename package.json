@@ -16,7 +16,7 @@
         "start": "node ./main.js"
     },
 	"bin":{
-		"aries":"./main.js"
+		"aries-start":"./main.js"
 		},
     "main":"./main.js",
 	"config" : { 
