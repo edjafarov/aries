@@ -7,9 +7,9 @@
 HalloWorldController.prototype.sayHello = function(request, response){
 	response.end("Hello world!");
 };</pre>
-<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L12">see code</a></div>
 <div><a href="/hello-world">see live</a></div>
-		<h2>Features [ver 0.0.1]</h2>
+		<h2>Features</h2>
 		<h3>routing </h3>
 		<p>Routing with Aries as simple as writing comments. 
 		You just put variable name in curvy braces and put it as a parametr in your constructor. 
@@ -23,7 +23,7 @@ HalloWorldController.prototype.twitterUser = function(request, response, userId)
 	//ex. response.end("Hi "+ userId);
 };	
 		</pre>
-<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L59">see code</a></div>
 <div><a href="/twitter">see live</a></div>		
 		<h3>asynchronous</h3>
 		<p>Every request comes through a chain of functions to pass request to the next 
@@ -38,7 +38,7 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 	this.doNext(request, response);				
 };
 </pre>
-<div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L34">see code</a></div>
 <div><a href="/twitter">see live</a></div>	
 		<h3>smart binding</h3>
 		<p>
@@ -54,11 +54,11 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 	//ex. response.end("Hi "+ twitId);
 };
 </pre>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L34">see code</a></div>
+<div><a href="/twitter">see live</a></div>	
 		
 		<h3>middleware</h3>
-		<p>
-		Standard request flow goes through following chain:
-		</p>
+		<p>Standard request flow goes through following chain:</p>
 		<p>
 		filters->controller resolver->pre controller interceptors->controller->post controller interceptors->view resolver
 which gives us flexibility of using middleware as filters, pre and post controller interceptors.
@@ -82,12 +82,7 @@ For example we can use connect's static middleware to handle static content as a
 <p>now start server with</p>
 <pre class="prettyprint">aries-start src=./src port=8000</pre>
 <p>
-where src is a folder with sources of your server
-</p><!--
-if you run aries-start - this site will be started.
-to configure port and host:		
-		-->
-		
-		
+where src is a folder with sources of your server and port... is a port
+</p>
     </div>
   </div>
