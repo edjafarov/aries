@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-var CONTROLLERS_PATH = "./controllers/";
 
 var SRC_PATH = "./src";
 var PORT = process.env.PORT || process.env.npm_package_config_port;
