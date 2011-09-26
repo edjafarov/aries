@@ -19,55 +19,23 @@ HalloWorldController.prototype.sayHello = function(request, response){
  *@RequestMapping(value="/twitter/{userId}") 
  */
 HalloWorldController.prototype.twitterUser = function(request, response, userId){
-    var that = this;
-
-	doTwitterCall(userId, function(msg){
-		var twitResponse = JSON.parse(msg);
-				
-		that.setView("/ejs/Layout.html",
-		{
-		head:{	
-			title:"aries-node: {hallo "+ userId +"!}"
-			},
-		bodyPath:"/ejs/twitterFeedExample.html",
-		topNavBar:{activeItem:null},
-		twitResponse:twitResponse,
-		userId:userId
-		});	
-		that.doNext(request, response);				
-	})
-
+	//we can use userId here
+	//ex. response.end("Hi "+ userId);
 };	
 		</pre>
 <div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
 <div><a href="/twitter">see live</a></div>		
 		<h3>asynchronous</h3>
-		<p>		Aries provides some magic that allow to get post and get params inside controller by just declaring 
-		those as a parameter for controller function
+		<p>Every request comes through a chain of functions to pass request to the next 
+		function you need to call this.doNext method along with request and response.
 </p>
 <pre  class="prettyprint sh_javascript">
 /**
  *@RequestMapping(value="/twitter/tweets") 
  */
 HalloWorldController.prototype.twitterFeed = function(request, response, twitId){
-    var that = this;
-
-	doTwitterCall(twitId, function(msg){
-		var twitResponse = JSON.parse(msg);
-				
-		that.setView("/ejs/Layout.html",
-		{
-		head:{	
-			title:"aries-node: {hallo "+ twitId +"!}"
-			},
-		bodyPath:"/ejs/twitterFeedExample.html",
-		topNavBar:{activeItem:null},
-		twitResponse:twitResponse,
-		userId:twitId
-		});	
-		that.doNext(request, response);				
-	})
-
+	//you can pass flow to view resolver asynchronously
+	this.doNext(request, response);				
 };
 </pre>
 <div><a href="https://github.com/edjafarov/AriesNode/blob/master/src/controllers/HalloWorldController.js">see code</a></div>
@@ -79,10 +47,11 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 		those as a parameter for controller function</p>
 <pre  class="prettyprint sh_javascript">
 /**
- *@RequestMapping(value="/twitter/{userId}/updates") 
+ *@RequestMapping(value="/twitter/tweets") 
  */
-HalloWorldController.prototype.getTwittsByUserId = function(request, response, userId){
-	TODO:WRITE BODY
+HalloWorldController.prototype.twitterFeed = function(request, response, twitId){
+	//you can use twitId here if it is passed as POST or GET parameter
+	//ex. response.end("Hi "+ twitId);
 };
 </pre>
 		
@@ -111,9 +80,9 @@ For example we can use connect's static middleware to handle static content as a
 		<pre class="prettyprint">npm install -g aries</pre>
 
 <p>now start server with</p>
-<pre class="prettyprint">aries-start /src</pre>
+<pre class="prettyprint">aries-start src=./src port=8000</pre>
 <p>
-where src is a folder with your server
+where src is a folder with sources of your server
 </p><!--
 if you run aries-start - this site will be started.
 to configure port and host:		
