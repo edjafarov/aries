@@ -5,3 +5,7 @@ body {
 .container{
 	width: 700px;
 }
+
+pre {
+	margin: 7px 0 4px 0;
+}

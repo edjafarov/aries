@@ -1,0 +1,35 @@
+  <div class="container">
+    <div class="content">
+		<h2>Getting started</h2> 
+		<p>Install aries</p>
+<pre class="prettyprint">
+npm install -g aries
+</pre>		
+<p>-g is important, that will allow to use aries-start anywhere</p>
+<p>Now let's build our first Hello-World app in 3 steps:</p>
+<ol>
+	<li>make a folder (ex. <code>src</code>)</li>
+	<li>create <code>app.json</code> config file in <code>app-cfg</code> (ie. <code>./src/app-cfg/app.json</code>)
+	<pre class="prettyprint sh_javascript">{
+"name":"Test App"
+,"ver":"0.1"
+}</pre>
+	</li>
+	<li>create hallo world controller inside <code>src</code> folder (<code>./src/HalloWorldController.js</code>)
+	<pre class="prettyprint sh_javascript">function HalloWorldController(request, response){
+  
+}
+
+/**
+ *@RequestMapping(value="/") 
+ */
+HalloWorldController.prototype.sayHallo = function(request, response){
+	response.end("Hello world!");
+};</pre>
+	</li>
+</ol>
+<p>to start server just</p>
+<pre class="prettyprint">aries-start src=./src port=8080</pre>
+<p>now go to <a href="localhost:8080">localhost:8080</a></p>
+</div>
+</div>

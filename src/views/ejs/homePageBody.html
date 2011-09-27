@@ -7,7 +7,7 @@
 HalloWorldController.prototype.sayHello = function(request, response){
 	response.end("Hello world!");
 };</pre>
-<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L12">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L11">see code</a></div>
 <div><a href="/hello-world">see live</a></div>
 		<h2>Features</h2>
 		<h3>routing </h3>
@@ -23,7 +23,7 @@ HalloWorldController.prototype.twitterUser = function(request, response, userId)
 	//ex. response.end("Hi "+ userId);
 };	
 		</pre>
-<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L59">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L55">see code</a></div>
 <div><a href="/twitter">see live</a></div>		
 		<h3>asynchronous</h3>
 		<p>Every request comes through a chain of functions to pass request to the next 
@@ -38,7 +38,7 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 	this.doNext(request, response);				
 };
 </pre>
-<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L34">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L36">see code</a></div>
 <div><a href="/twitter">see live</a></div>	
 		<h3>smart binding</h3>
 		<p>
@@ -54,7 +54,7 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 	//ex. response.end("Hi "+ twitId);
 };
 </pre>
-<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L34">see code</a></div>
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/controllers/HalloWorldController.js#L36">see code</a></div>
 <div><a href="/twitter">see live</a></div>	
 		
 		<h3>middleware</h3>
