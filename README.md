@@ -9,10 +9,12 @@ HalloWorldController.prototype.sayHello = function(request, response){
 };
 ```
 ##Installation
+
 ```
 npm install -g aries
 ```
 now start server with
+
 ```
 aries-start src=./src port=8000
 ```
@@ -21,6 +23,7 @@ where src is a folder with sources of your server and port... is a port
 ##Features
 ###routing
 Routing with Aries as simple as writing comments. You just put variable name in curvy braces and put it as a parametr in your constructor. Aries dynamically assigns the value to variable.
+
 ```javascript
 /**
  *@RequestMapping(value="/twitter/{userId}") 
@@ -32,6 +35,7 @@ HalloWorldController.prototype.twitterUser = function(request, response, userId)
 ```
 ###asynchronous
 Every request comes through a chain of functions to pass request to the next function you need to call this.doNext method along with request and response.
+
 ```javascript
 /**
  *@RequestMapping(value="/twitter/tweets") 
@@ -42,6 +46,7 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 };```
 ###smart binding
 Aries provides some magic that allow to get post and get params inside controller by just declaring those as a parameter for controller function
+
 ```javascript
 /**
  *@RequestMapping(value="/twitter/tweets") 
@@ -53,6 +58,7 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 ###middleware
 Standard request flow goes through following chain:
 [filters]->[controller resolver]->[pre controller interceptors]->[controller]->[post controller interceptors]->[view resolver] which gives us flexibility of using middleware as filters, pre and post controller interceptors. For example we can use connect's static middleware to handle static content as a filter which is the best to handle before controller resolver. To assign class as filter we just need to put Filter annotation before constructor.
+
 ```javascript
 var connect = require("connect");
 var static = connect.static(__dirname + "/src/static");
