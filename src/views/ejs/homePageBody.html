@@ -60,11 +60,30 @@ HalloWorldController.prototype.twitterFeed = function(request, response, twitId)
 		<h3>middleware</h3>
 		<p>Standard request flow goes through following chain:</p>
 		<p>
-		filters->controller resolver->pre controller interceptors->controller->post controller interceptors->view resolver
+		[filters]->[controller resolver]->[pre controller interceptors]->[controller]->[post controller interceptors]->[view resolver]
 which gives us flexibility of using middleware as filters, pre and post controller interceptors.
 For example we can use connect's static middleware to handle static content as a filter which is the best to handle before controller resolver.
  To assign class as filter we just need to put Filter annotation before constructor.
 		</p>
+<pre  class="prettyprint sh_javascript">
+var connect = require("connect");
+var static = connect.static(__dirname + "/src/static");
+/**
+ * @Filter
+ */
+function StaticFilter(){}
+
+StaticFilter.prototype.filter=function(request, response){
+	var that=this;
+	static(request, response, 
+		function(){
+			that.doNext(request, response);
+		}
+	);
+}
+</pre>	
+<div><a href="https://github.com/edjafarov/aries/blob/master/src/filters/StaticFilter.js">see code</a></div>
+<div>see live? you are already seeing it. this site's static served by connect middleware</div>		
 		<h3>there is more comming</h3>
 		<ul>
 			<li>session management</li>
