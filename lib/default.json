@@ -37,13 +37,13 @@
  * accessibility, perfomance and memory evviciency.
  * default is StatelessDispatcher
  */
-,"Dispatcher":"./lib/Dispatchers/ContextBoundedDispatcher.js"
+,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
 /**
  * View resolver controlles how exactly view will be processed.
  * Can be customized to use any template engine.
  * default SimpleViewResolver
  */
-,"ViewResolver":"./lib/ViewResolvers/SimpleViewResolver.js"
+,"ViewResolver":"./lib/ViewResolvers/EjsViewResolver.js"
 /**
  * Configuration could be resolved wit custom configuration resolvers.
  * Custom config resolvers could change basic configuration in any way.

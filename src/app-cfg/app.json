@@ -1,9 +1,4 @@
 {
-"name":"Test App"
+"name":"Aries site app"
 ,"ver":"0.1"
-,"interceptors":[]
-,"UrlResolver":"./lib/DynamicUrlResolver.js"
-,"ClassLoader":"ClassLoader"
-,"Dispatcher":"./lib/Dispatchers/Dispatcher.js"
-,"ViewResolver":"./lib/ViewResolvers/EjsViewResolver.js"
 }
