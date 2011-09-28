@@ -33,6 +33,7 @@ HalloWorldController.prototype.twitterUser = function(request, response, userId)
 	//ex. response.end("Hi "+ userId);
 };	
 ```
+
 ###asynchronous
 Every request comes through a chain of functions to pass request to the next function you need to call this.doNext method along with request and response.
 
@@ -43,7 +44,9 @@ Every request comes through a chain of functions to pass request to the next fun
 HalloWorldController.prototype.twitterFeed = function(request, response, twitId){
 	//you can pass flow to view resolver asynchronously
 	this.doNext(request, response);				
-};```
+};
+```
+
 ###smart binding
 Aries provides some magic that allow to get post and get params inside controller by just declaring those as a parameter for controller function
 
@@ -54,7 +57,9 @@ Aries provides some magic that allow to get post and get params inside controlle
 HalloWorldController.prototype.twitterFeed = function(request, response, twitId){
 	//you can use twitId here if it is passed as POST or GET parameter
 	//ex. response.end("Hi "+ twitId);
-};```
+};
+```
+
 ###middleware
 Standard request flow goes through following chain:
 [filters]->[controller resolver]->[pre controller interceptors]->[controller]->[post controller interceptors]->[view resolver] which gives us flexibility of using middleware as filters, pre and post controller interceptors. For example we can use connect's static middleware to handle static content as a filter which is the best to handle before controller resolver. To assign class as filter we just need to put Filter annotation before constructor.
@@ -76,6 +81,7 @@ StaticFilter.prototype.filter=function(request, response){
 	);
 }	
 ```
+
 ###there is more comming
 session management
 cookie support
